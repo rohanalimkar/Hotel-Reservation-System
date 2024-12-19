@@ -42,7 +42,7 @@ public class DBConfig {
 
 	}
 
-	private static DBConfig getInstance() {
+	public static DBConfig getInstance() {
 		if (config == null) {
 			config = new DBConfig();
 		}
