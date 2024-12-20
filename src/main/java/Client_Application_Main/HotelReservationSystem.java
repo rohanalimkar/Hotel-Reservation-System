@@ -11,8 +11,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 
+import Model.AdminMaster;
 import Model.CustomerMaster;
 import Model.StateMaster;
+import Services.AdminService;
+import Services.AdminServiceImp;
 import Services.CustomerService;
 import Services.CustomerServiceImp;
 import Services.StateService;
@@ -35,20 +38,25 @@ public class HotelReservationSystem {
 	public static void main(String[] args) {
 		
 		Scanner sc=new Scanner(System.in);
+		boolean flag=true;
 		StateService stateService=new StateServiceImp();
+		AdminService adminService=new AdminServiceImp();
 		CustomerService customerService=new CustomerServiceImp();
+		
+		StateMaster state=null;
 		try {
 			do {
 			log.info("******Welcom To Hotel Reservation System*****");
-			log.info("Login in Application\n1.Customer.\n2.Admin.\n3.Close System.");
+			log.info("\nLogin in Application\n1.Customer.\n2.Admin.\n3.Close System.");
 			System.out.println("Enter Your Choice");
 			int login=sc.nextInt();
 			switch(login)
 			{
 			case 1:{
+					//-----------------Customer Login---------------------------------
 					do {
 						
-						log.info("1.Already have Customer Account\n2.Create New Account.\n3.Close");
+						log.info("\n1.Customer Login\n2.Create New Account.\n3.Close");
 						System.out.println("Enter Your Choice");
 					int Ac=sc.nextInt();
 					sc.nextLine();
@@ -56,16 +64,28 @@ public class HotelReservationSystem {
 					{
 					case 1:
 					{
-						
+						//---------------------------Customer Login with Credential---------------------
 						System.out.println("Enter You email for login");
-						sc.nextLine();
-						String email=sc.nextLine();
+						String customerEmail=sc.nextLine();
 						System.out.println("Enter Your Password");
-						String pass=sc.nextLine();
+						String password=sc.nextLine();
+						if (customerService.validateLogin(customerEmail, password)) {
+							String customerName=customerService.getFirstName(customerEmail);
+							System.out.println("**********************************************************");
+							System.out.println(customerName+"\n");
+							System.out.println("**********************************************************");
+							
+							
+							
+				        } else {
+				            System.out.println("You Enter Invalid email or password.\n");
+				            System.out.println("**********************************************************");
+				        }
 					}
 							break;
 					case 2:
 					{
+						//--------------------------Create customer account------------------------------
 					System.out.println("Enter Your Details.");
 					System.out.println("Enter Your First name:");
 					String firstName=sc.nextLine();
@@ -108,23 +128,69 @@ public class HotelReservationSystem {
 					}
 						break;
 					case 3:
+						//------------------------------close the system-------------------------------
 						System.out.println("Thank You for visiting");
-						System.exit(0);
-						default:System.out.println("You enter wrong choice.");
+						flag=false;
+						break;
+						
+					default:System.out.println("You enter wrong choice.");
 					}
-					}while(true);	
+					}while(flag!=false);	
 			}
-			case 2:{
-				System.out.println("Enter State");
-				System.out.println(stateService.addState(new StateMaster(1,sc.nextLine()))?"State Add Successfully....":"State not Added.");
+			break;
+			case 2:
+					{
+				//-------------------------------Admin Login----------------------------------- 
+				
+				do {
+					System.out.println("\n1.Admin Login\n2.Create New Admin");
+					int ch=sc.nextInt();
+							sc.nextLine();
+					switch(ch) {
+					case 1:{
+				//-------------------------------Admin Login-----------------------------------
+					
+					}
+					break;
+					case 2:
+					{
+						//-------------------------------Create Admin-----------------------------------
+						System.out.println("Enter State Name:");
+						String stateName=sc.nextLine();
+						int stateId=stateService.isStatePresent(stateName);
+						if(stateId>0) {
+							System.out.println("State Found");
+						
+						}else {
+							state=new StateMaster();
+							state.setStateName(stateName);
+							//if state not found then it state add by using below method
+							System.out.println(stateService.addState(state)?"State added Successfully":"State not added successfully");
+							
+						}
+					}
+					break;
+					case 3:
+						//------------------------------close the system-------------------------------
+						System.out.println("Thank You for visiting");
+						flag=false;
+						break;
+						
+					default:System.out.println("You enter wrong choice.");
+
+					}
+					
+				}while(true);
+
 				}
-				break;
 			case 3:
+				//------------------------------close the system-------------------------------
 				System.out.println("Thank You for visiting");
-				System.exit(0);
+				flag=false;
+				break;
 			default:System.out.println("You Enetr Wrong Choice.");
 			}
-			}while(true);
+			}while(flag!=false);
 		} catch (Exception e) {
 			log.fatal(e);
 		}
