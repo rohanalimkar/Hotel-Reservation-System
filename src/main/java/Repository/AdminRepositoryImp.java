@@ -1,5 +1,6 @@
 package Repository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,5 +46,13 @@ public class AdminRepositoryImp extends DBState implements AdminRepository {
 			System.out.println("Database connection error: " + e.getMessage());
 			return false;
 		}
+		finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (ps != null) ps.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 	}
 }

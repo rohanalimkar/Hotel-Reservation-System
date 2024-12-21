@@ -9,11 +9,13 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-@AllArgsConstructor
 @EqualsAndHashCode
 public class CityMaster {
+private int cityId;
 private String cityName;
-public CityMaster(){
-	
+public CityMaster(){}
+public CityMaster(int cityId,String cityName){
+	this.cityId=cityId;
+	this.cityName=cityName;
 }
 }

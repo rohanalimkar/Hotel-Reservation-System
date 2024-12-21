@@ -1,5 +1,6 @@
 package Repository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,14 @@ public class CustomerRepositoryImp extends DBState implements CustomerRepository
 			e.printStackTrace();
 			return false;
 		}
+		finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (ps != null) ps.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 		
 		
 		

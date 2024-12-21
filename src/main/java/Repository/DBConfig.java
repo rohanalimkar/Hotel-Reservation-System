@@ -18,24 +18,23 @@ public class DBConfig {
 			FileInputStream inputStream = new FileInputStream(path + "\\src\\main\\resources\\application.properties");
 			Properties p = new Properties();
 			p.load(inputStream);
-			System.out.println(path);
 			String driverClassName = p.getProperty("driver");
 			String userName = p.getProperty("userName");
 			String password = p.getProperty("password");
 			String url = p.getProperty("url");
 
-			System.out.println("Driver Name : " + driverClassName);
-			System.out.println("Username : " + userName);
-			System.out.println("password :" + password);
-			System.out.println("Url :" + url);
-			System.out.println();
+//			System.out.println("Driver Name : " + driverClassName);
+//			System.out.println("Username : " + userName);
+//			System.out.println("password :" + password);
+//			System.out.println("Url :" + url);
+//			System.out.println();
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			conn = DriverManager.getConnection(url, userName, password);
-			if (conn != null) {
-				System.out.println("Connected successfully");
-			} else {
-				System.out.println("Connected failed !!!");
-			}
+//			if (conn != null) {
+//				System.out.println("Connected successfully");
+//			} else {
+//				System.out.println("Connected failed !!!");
+//			}
 		} catch (Exception e) {
 			System.out.println(e);
 		}

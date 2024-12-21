@@ -4,6 +4,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
+import Client_Application_Main.HotelReservationSystem;
 import Model.StateMaster;
 import model.StateModel;
 
@@ -28,24 +31,31 @@ List<StateMaster>  list=new ArrayList<StateMaster>();
 	//----------------------check State is present or not
 	@Override
 	public int isStatePresent(String stateName) {
-		StateMaster state=null;
+		
 		try {
 			ps=con.prepareStatement("select stateId from state where stateName=?");
 			ps.setString(1,stateName);
 			rs=ps.executeQuery();
 			if(rs.next())
 			{
-				int stateId=rs.getInt(stateName);
-				state=new StateMaster();
-				state.setStateId(stateId);
-				return state.getStateId();
+				int stateId=rs.getInt(1);
+				return stateId;
+
 			}else {
-	            // Return null if state fetching failed (state not found)
+	            //state not found)
 	            return 0;
 			}
 		} catch (Exception e) {
 			return 0;
 		}
+		finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (ps != null) ps.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 		
 	}
 }
