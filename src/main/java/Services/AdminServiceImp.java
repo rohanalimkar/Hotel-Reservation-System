@@ -17,5 +17,4 @@ public class AdminServiceImp implements AdminService {
 		return adminRepo.validateLogin(username, password);
 	}
 
-	
 }
