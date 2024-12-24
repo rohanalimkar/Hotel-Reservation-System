@@ -54,8 +54,34 @@ public class HotelRepositoryImp extends DBState implements HotelRepository {
 	        }
 	    }
 		 
-		
 	
 	}
+	
+	
+	//-----------Fetch User name From Database--------------------
+		@Override
+		public String getHotelName(String hotelEmail) {
+			HotelMaster hotel = null;
+			try {
+				ps=con.prepareStatement("SELECT a.adminId, a.username, h.hotelName FROM admin a JOIN hotel h ON a.hotelId = h.hotelId WHERE a.hotelEmail =?");
+				ps.setString(1, hotelEmail);
+				rs = ps.executeQuery();
+				if (rs.next()) {
+		            // Retrieve hotel Name details from database
+		            String hotelName = rs.getString("hotelName");
+
+		            hotel = new HotelMaster();
+		            hotel.setHotelName(hotelName);
+		            return "Welcome to "+ hotel.getHotelName() +" Admin Pannel";
+		        } else {
+		            // Return null if login failed (Hotel not found)
+		            return null;
+		        }
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			return null;
+		}
+
 
 }

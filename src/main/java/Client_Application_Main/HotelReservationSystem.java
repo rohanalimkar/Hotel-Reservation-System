@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 
 import Model.AdminMaster;
+import Model.AmenitiesMaster;
 import Model.CityMaster;
 import Model.CustomerMaster;
 import Model.DistrictMaster;
@@ -22,6 +23,8 @@ import Model.StateDistrictCityJoinMaster;
 import Model.StateMaster;
 import Services.AdminService;
 import Services.AdminServiceImp;
+import Services.AmenitiesService;
+import Services.AmenitiesServiceImp;
 import Services.CityService;
 import Services.CityServiceImp;
 import Services.CustomerService;
@@ -67,6 +70,7 @@ public class HotelReservationSystem {
 		HotelService hotelService=new HotelServiceImp();
 		MainAdminService mainAdminService=new MainAdminServiceImp();
 		SendMailService mailService=new SendMailServiceImp();
+		AmenitiesService amenitiesService=new AmenitiesServiceImp();
 		
 		StateMaster state=null;
 		DistrictMaster district=null;
@@ -76,6 +80,7 @@ public class HotelReservationSystem {
 		HotelMaster hotel=null;
 		MainAdminMaster mainAdmin=null;
 		EmailMaster email=null;
+		AmenitiesMaster amenities=null;
 		
 		try {
 			do {
@@ -105,9 +110,9 @@ public class HotelReservationSystem {
 						String password=sc.nextLine().trim();
 						if (customerService.validateLogin(customerEmail, password)) {
 							String customerName=customerService.getFirstName(customerEmail);
-							System.out.println("**********************************************************");
-							System.out.println(customerName+"\n");
-							System.out.println("**********************************************************");
+							System.out.println("_________________________________________________________________");
+							System.out.println("\n\t\t"+customerName);
+							System.out.println("_________________________________________________________________");
 							System.out.println("Enter State Name:");
 							String stateName=sc.nextLine().trim();
 							System.out.println(stateName);
@@ -197,11 +202,11 @@ public class HotelReservationSystem {
 						break;
 					case 3:
 						//------------------------------close the system-------------------------------
-						System.out.println("Thank You for visiting");
+						System.out.println("\nThank You for visiting");
 						exitFlag=true;
 						break;
 						
-					default:System.out.println("You enter wrong choice.");
+					default:System.out.println("\nYou enter wrong choice.");
 					}
 					}while(!exitFlag);	
 					 exitFlag = false;			}
@@ -225,10 +230,37 @@ public class HotelReservationSystem {
 						System.out.println("Enter Your Password");
 						String password=sc.nextLine().trim();
 						if (adminService.validateLogin(hotelEmail, password)) {
-							System.out.println("Welcome to Admine Pannel");
-							System.out.println("**********************************************************");
-							System.out.println(hotelEmail+"\n");
-							System.out.println("**********************************************************");
+							System.out.println("\n_________________________________________________________________");
+							System.out.println("\n\t\t"+hotelService.getHotelName(hotelEmail));
+							System.out.println("_________________________________________________________________");
+						
+							do {
+								System.out.println("\n1.Add amenities\n2.Delete amenities\n3.Update amenities Price.\n4.Exit from current menu.");
+								System.out.println("Enter Your Choice:");
+								int ch3=sc.nextInt();
+								sc.nextLine();
+								switch(ch3)
+								{
+								case 1://1.Add amenities
+									break;
+								case 2://2.Delete amenities
+									break;
+								case 3://Update amenities Price.
+									break;
+								case 4://------------------------------close the system-------------------------------
+									System.out.println("\nThank You for visiting\n");
+									exitFlag=true;
+									break;
+									//------------------------------close the system End-------------------------------
+								default:System.out.println("\nYou enter wrong choice.");
+									break;
+									
+								}
+							}while(!exitFlag);	
+							 exitFlag = false;  // Reset flag
+							
+						}else {
+							System.out.println("Passwords do not match. Please try again.");
 						}
 					 
 					}
@@ -242,15 +274,15 @@ public class HotelReservationSystem {
 							switch(ch1) {
 							case 1:{
 								//--------------------------Login in Main Admin----------------------------------
-									System.out.println("Enter You Email for Login:");
+									System.out.println("\nEnter You Email for Login:");
 									String adminName=sc.nextLine().trim();
-									System.out.println("Enter Your Password:");
+									System.out.println("\nEnter Your Password:");
 									String password=sc.nextLine().trim();
 									if(mainAdminService.validateLogin(adminName, password)) {
 										
 										do {
-											System.out.println("\n1.Create sub Admin.\n2.Update State\n3.Delete State\n4.Update District.\n5.Delete District.\n6.Update City.\n7.Delete City.\n8Update Sub Admin.");
-											System.out.println("Enter Your Choice:");
+											System.out.println("\n1.Create sub Admin.\n2.Add amenities\n3.Delete amenities\n4.Update State\n5.Delete State\n6.Update District.\n7.Delete District.\n8.Update City.\n9.Delete City.\n10.Update Sub Admin.\n11.Exit from current menu.");
+											System.out.println("\nEnter Your Choice:");
 											int ch2=sc.nextInt();
 													sc.nextLine();
 											switch(ch2) {
@@ -301,13 +333,13 @@ public class HotelReservationSystem {
 																        String hotelEmail=sc.nextLine();
 																		admin=new AdminMaster();
 																		admin.setHotelId(hotelId);
-																		admin.setPassword(password);
+																		admin.setPassword(password1);
 																		admin.setUsername(adminName1);
 																		admin.setHotelEmail(hotelEmail);
 																		String from="rohanalimkar@gmail.com";
-																		String subject="Your account details";
-																		String text="Dear "+admin.getUsername()+",\n\nYour admin account has been created with the following details:\n\nUsername: "+admin.getUsername()+"\nPassword:"+admin.getPassword()+"\nHotel Details:\nHotel Name:"+hotelName+"\nBest regards,\r\n"
-																				+ "Your Company";
+																		String subject="Your Hotel Account details";
+																		String text="Dear "+admin.getUsername()+",\n\nYour admin account has been created with the following details:\n\nUsername: "+admin.getUsername()+"\nPassword:"+admin.getPassword()+"\nHotel Details:\nHotel Name:"+hotelName+"\nHotel Location:\nState: "+stateName+"\nDistrict: "+districtName+"\nCity: "+cityName+"\nBest regards,\r\n"
+																				+ "RA InfoTech";
 																		email=new EmailMaster();
 																		email.setTo(hotelEmail);
 																		email.setFrom(from);
@@ -316,7 +348,7 @@ public class HotelReservationSystem {
 																		
 																		if(mailService.sendEmail(email));
 																		
-																		System.out.println(adminService.isaddNewCustomer(admin)?"Sub Admin added successfully now you can Login":"Sub admin not cretaed...");
+																		System.out.println(adminService.isaddNewCustomer(admin)?"Sub Admin added successfully now you can Login Now You Can Login":"Sub admin not cretaed...");
 																        
 							
 																    } else {
@@ -364,9 +396,51 @@ public class HotelReservationSystem {
 												}
 											break;
 											//-------------------------------Create Sub Admin End-----------------------------------
-									}
+											case 2:	
+														System.out.println("\n Enter Your amenities Details:");
+														System.out.println("Amenity Name:");
+														String amenityName=sc.nextLine().trim();
+														System.out.println("Amenity description:");
+														String description=sc.nextLine().trim();
+														amenities=new AmenitiesMaster();
+														amenities.setAmenityName(amenityName);
+														amenities.setDescription(description);
+														System.out.println(amenitiesService.addAmenities(amenities)?"amenity added successfully":"amenity not added");
+												break;
+												case 3:	//3.Delete amenities
+												break;
+												case 4:	System.out.println("\n Enter Amenity Name for Update:");
+														 amenityName=sc.nextLine().trim();
+														int amenityId=amenitiesService.getAmenityId(amenityName);
+														System.out.println("Enter Updated amenityName:");
+														amenityName=sc.nextLine().trim();
+														System.out.println("Enter Updated amenity description:");
+														description=sc.nextLine().trim();
+														System.out.println(amenitiesService.updateAmenities(amenityName, description, amenityId)?"Amenity Updated Successfully":"Amenity not Updated");
+												break;
+												case 5:	//5.Delete State
+												break;
+												case 6:	//6.Update District.
+												break;
+												case 7:	//7.Delete District.
+												break;
+												case 8:	//8.Update City.
+												break;
+												case 9:	//9.Delete City.
+												break;
+												case 10:	//10.Update Sub Admin.
+												break;
+												case 11:	//------------------------------close the system-------------------------------
+													System.out.println("Thank You for visiting\n");
+													exitFlag=true;
+													break;
+													//------------------------------close the system End-------------------------------
+												default:System.out.println("You enter wrong choice.");
+
+
+											}
 								}while(!exitFlag);	
-								 exitFlag = false;  // Reset exitflag
+								 exitFlag = false;
 								
 										}else {
 												System.out.println("\nYou Enter Wrong User Name or password.\n");

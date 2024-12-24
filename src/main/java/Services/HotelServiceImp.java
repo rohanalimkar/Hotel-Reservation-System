@@ -19,4 +19,10 @@ public class HotelServiceImp implements HotelService {
 		return hotelRepo.isHotelPresent( hotelName, stateName, districtName, cityName);
 	}
 
+	@Override
+	public String getHotelName(String hotelEmail) {
+		
+		return hotelRepo.getHotelName(hotelEmail);
+	}
+
 }
