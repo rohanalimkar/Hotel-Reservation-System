@@ -54,5 +54,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="/house_price_prediction"/>
+	<classpathentry kind="src" path="/logindermo"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

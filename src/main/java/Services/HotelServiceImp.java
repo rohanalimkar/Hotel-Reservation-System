@@ -14,9 +14,9 @@ public class HotelServiceImp implements HotelService {
 	}
 
 	@Override
-	public int isHotelPresent(String stateName) {
+	public int isHotelPresent(String hotelName,String stateName,String districtName,String cityName) {
 		
-		return hotelRepo.isHotelPresent(stateName);
+		return hotelRepo.isHotelPresent( hotelName, stateName, districtName, cityName);
 	}
 
 }

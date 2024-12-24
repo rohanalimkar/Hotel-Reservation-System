@@ -17,10 +17,11 @@ public class AdminRepositoryImp extends DBState implements AdminRepository {
 		
 		 try {
 		 
-			ps=con.prepareStatement("insert into admin(adminId,username,password,hotelId) values('0',?,?,?,)");
+			ps=con.prepareStatement("insert into admin(adminId,username,password,hotelId,hotelEmail) values('0',?,?,?,?)");
 			ps.setString(1, admin.getUsername());
 			ps.setString(2, admin.getPassword());
-			ps.setString(3, admin.getHotelId());
+			ps.setInt(3, admin.getHotelId());
+			ps.setString(4, admin.getHotelEmail());
 			int result=ps.executeUpdate();
 			return result>0?true:false;
 		} catch (Exception e) {
@@ -29,13 +30,13 @@ public class AdminRepositoryImp extends DBState implements AdminRepository {
 		}	
 	} 
 	
-//-------------Validating the Customer----------------------	
+//-------------Validating the Sub Admin----------------------	
 	@Override
-	public boolean validateLogin(String userName, String password) {
+	public boolean validateLogin(String hotelEmail, String password) {
 		try {
-			ps=con.prepareStatement("SELECT * FROM admin WHERE userName = ? AND password = ?");
-			ps.setString(1, userName);
-			ps.setString(2, password);
+			ps=con.prepareStatement("SELECT * FROM admin WHERE password = ? and hotelEmail= ?");
+			ps.setString(1, password);
+			ps.setString(2, hotelEmail);
 			rs=ps.executeQuery();
 			if(rs.next()) {
 				return true;

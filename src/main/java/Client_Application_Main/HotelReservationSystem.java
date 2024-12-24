@@ -15,6 +15,7 @@ import Model.AdminMaster;
 import Model.CityMaster;
 import Model.CustomerMaster;
 import Model.DistrictMaster;
+import Model.EmailMaster;
 import Model.HotelMaster;
 import Model.MainAdminMaster;
 import Model.StateDistrictCityJoinMaster;
@@ -31,6 +32,8 @@ import Services.HotelService;
 import Services.HotelServiceImp;
 import Services.MainAdminService;
 import Services.MainAdminServiceImp;
+import Services.SendMailService;
+import Services.SendMailServiceImp;
 import Services.StateDistrictCityJoinService;
 import Services.StateDistrictCityJoinServiceImp;
 import Services.StateService;
@@ -63,6 +66,7 @@ public class HotelReservationSystem {
 		StateDistrictCityJoinService sdcService=new StateDistrictCityJoinServiceImp();
 		HotelService hotelService=new HotelServiceImp();
 		MainAdminService mainAdminService=new MainAdminServiceImp();
+		SendMailService mailService=new SendMailServiceImp();
 		
 		StateMaster state=null;
 		DistrictMaster district=null;
@@ -71,6 +75,7 @@ public class HotelReservationSystem {
 		StateDistrictCityJoinMaster sdc=null;
 		HotelMaster hotel=null;
 		MainAdminMaster mainAdmin=null;
+		EmailMaster email=null;
 		
 		try {
 			do {
@@ -111,9 +116,19 @@ public class HotelReservationSystem {
 							if(stateId>0) {
 								System.out.println("Enter District Name:");
 								String districtName=sc.nextLine().trim();
+								
+								
+								System.out.println("Do you want state wise hotel...");
+								String choice=sc.nextLine();	
+								 
 								int districtId=districtService.isDistrictPresent(districtName);
 								if(districtId>0)
 								{
+									String confirm="yes";
+									while(choice==confirm){
+										
+										
+									}
 									System.out.println("Enter City Name:");
 									String cityName=sc.nextLine().trim();
 									int cityId=cityService.isCityPresent(cityName);
@@ -189,8 +204,7 @@ public class HotelReservationSystem {
 					default:System.out.println("You enter wrong choice.");
 					}
 					}while(!exitFlag);	
-					 exitFlag = false;  // Reset exitflag
-			}
+					 exitFlag = false;			}
 			break;
 			case 2:
 					{
@@ -203,24 +217,24 @@ public class HotelReservationSystem {
 							sc.nextLine();
 					switch(ch) {
 					case 1:{
-				//-------------------------------Admin Login-----------------------------------
+				//-------------------------------Sub Admin Login-----------------------------------
 					
 						
 					 System.out.println("Enter Your email for login");
-						String username=sc.nextLine().trim();
+						String hotelEmail=sc.nextLine().trim();
 						System.out.println("Enter Your Password");
 						String password=sc.nextLine().trim();
-						if (adminService.validateLogin(username, password)) {
+						if (adminService.validateLogin(hotelEmail, password)) {
 							System.out.println("Welcome to Admine Pannel");
 							System.out.println("**********************************************************");
-							System.out.println(username+"\n");
+							System.out.println(hotelEmail+"\n");
 							System.out.println("**********************************************************");
 						}
 					 
 					}
 					break;
 					case 2:
-					{
+					{	//-------------------------Main Admin-------------------------------------------------
 						do {
 							System.out.println("\n1.Main Admin Login.\n2.Create new Admin login.\n3.Exit from current menu\n");
 							int ch1=sc.nextInt();
@@ -233,86 +247,138 @@ public class HotelReservationSystem {
 									System.out.println("Enter Your Password:");
 									String password=sc.nextLine().trim();
 									if(mainAdminService.validateLogin(adminName, password)) {
-										//-------------------------------Create Admin-----------------------------------
-										System.out.println("\nFor Creating your admin account Provide Hotel details \n");
-										System.out.println("Enter State Name:");
-										String stateName=sc.nextLine().trim();
-										int stateId=stateService.isStatePresent(stateName);
-										if(stateId>0) {
-											System.out.println("Enter District Name:");
-											String districtName=sc.nextLine().trim();
-											int districtId=districtService.isDistrictPresent(districtName);
-											if(districtId>0)
-											{
-												System.out.println("Enter City Name:");
-												String cityName=sc.nextLine().trim();
-												int cityId=cityService.isCityPresent(cityName);
-												if(cityId>0)
-												{
-													int sdcId=sdcService.validateStateDistrictCity(stateId, districtId, cityId);
-													System.out.println(sdcId);
-													if(sdcId>0)
+										
+										do {
+											System.out.println("\n1.Create sub Admin.\n2.Update State\n3.Delete State\n4.Update District.\n5.Delete District.\n6.Update City.\n7.Delete City.\n8Update Sub Admin.");
+											System.out.println("Enter Your Choice:");
+											int ch2=sc.nextInt();
+													sc.nextLine();
+											switch(ch2) {
+											
+											case 1:{
+												//-------------------------------Create Sub Admin-----------------------------------
+												System.out.println("\nFor Creating your admin account Provide Hotel details \n");
+												System.out.println("Enter State Name:");
+												String stateName=sc.nextLine().trim();
+												int stateId=stateService.isStatePresent(stateName);
+												if(stateId>0) {
+													System.out.println("Enter District Name:");
+													String districtName=sc.nextLine().trim();
+													int districtId=districtService.isDistrictPresent(districtName);
+													if(districtId>0)
 													{
-														System.out.println("Enter Your hotel name:");
-														String hotelName=sc.nextLine().trim();
-														int hoteId=hotelService.isHotelPresent(hotelName);
-														if(hoteId>0)
+														System.out.println("Enter City Name:");
+														String cityName=sc.nextLine().trim();
+														int cityId=cityService.isCityPresent(cityName);
+														if(cityId>0)
 														{
-														System.out.println("Enter Admin Name:");
-														String adminName1=sc.nextLine().trim();
-														System.out.println("Enter admin password:");
-														String password1=sc.nextLine().trim();
-														if(adminService.validateLogin(adminName1, password1)){
-															
-															//write logic for add admin
+															int sdcId=sdcService.validateStateDistrictCity(stateId, districtId, cityId);
+															System.out.println(sdcId);
+															if(sdcId>0)
+															{
+																System.out.println("Enter Your hotel name:");
+																String hotelName=sc.nextLine().trim();
+																int hotelId=hotelService.isHotelPresent(hotelName,stateName,districtName,cityName);
+																if(hotelId>0)
+																{
+																System.out.println("Enter Admin Name:");
+																String adminName1=sc.nextLine().trim();
+//																System.out.println("Enter admin password:");
+																String password1 = null;
+//																System.out.println("Re-enter admin password:");
+																String password2;
+																boolean passwordsMatch = false;
+																while(!passwordsMatch) {
+																	
+																	System.out.println("Enter admin password:");
+																    password1 = sc.nextLine().trim();
+
+																    System.out.println("Re-enter admin password:");
+																    password2 = sc.nextLine().trim();
+																    if (password1.equals(password2)) {
+																        passwordsMatch = true; 
+																        System.out.println("Enter Hotel Mail:");
+																        String hotelEmail=sc.nextLine();
+																		admin=new AdminMaster();
+																		admin.setHotelId(hotelId);
+																		admin.setPassword(password);
+																		admin.setUsername(adminName1);
+																		admin.setHotelEmail(hotelEmail);
+																		String from="rohanalimkar@gmail.com";
+																		String subject="Your account details";
+																		String text="Dear "+admin.getUsername()+",\n\nYour admin account has been created with the following details:\n\nUsername: "+admin.getUsername()+"\nPassword:"+admin.getPassword()+"\nHotel Details:\nHotel Name:"+hotelName+"\nBest regards,\r\n"
+																				+ "Your Company";
+																		email=new EmailMaster();
+																		email.setTo(hotelEmail);
+																		email.setFrom(from);
+																		email.setSubject(subject);
+																		email.setText(text);
+																		
+																		if(mailService.sendEmail(email));
+																		
+																		System.out.println(adminService.isaddNewCustomer(admin)?"Sub Admin added successfully now you can Login":"Sub admin not cretaed...");
+																        
+							
+																    } else {
+																        System.out.println("Passwords do not match. Please try again.");
+																    }
+																}	
+																
+																
+																}else {
+																	hotel=new HotelMaster();
+																	hotel.setHotelName(hotelName);
+																	hotel.setHotelLocation(sdcId);
+																	System.out.println(hotelService.addNewHotel(hotel)?"Hotel Added Successfully":"Hotel Not added");
+																}
+															}else{
+																sdc=new StateDistrictCityJoinMaster();
+																sdc.setStateId(stateId);
+																sdc.setDistrictId(districtId);
+																sdc.setCityId(cityId);
+																System.out.println(sdcService.isaddNewStateDistrictCityJoin(sdc)?"Location added successfully":"Location not added successfully");
+															}
 														}else {
-															System.out.println("Incorrect UserName or Password:");
+															city=new CityMaster();
+															city.setCityName(cityName);
+															//write logic for add new City
+															System.out.println(cityService.addCity(city)?"City added Successfully\n":"City not added Successfully\n");
+															System.out.println("**************************************************");
 														}
-														}else {
-															hotel=new HotelMaster();
-															hotel.setHotelName(hotelName);
-															hotel.setHotelLocation(sdcId);
-															System.out.println(hotelService.addNewHotel(hotel)?"Hotel Added Successfully":"Hotel Not added");
-														}
-													}else{
-														sdc=new StateDistrictCityJoinMaster();
-														sdc.setStateId(stateId);
-														sdc.setDistrictId(districtId);
-														sdc.setCityId(cityId);
-														System.out.println(sdcService.isaddNewStateDistrictCityJoin(sdc)?"Location added successfully":"Location not added successfully");
+													}else {
+														district=new DistrictMaster();
+														district.setDistrictName(districtName);
+														//write logic for add new District
+														System.out.println(districtService.addDistrict(district)?"District added Successfully\n":"District not added Successfully\n");
+														System.out.println("**************************************************");
 													}
+													
 												}else {
-													city=new CityMaster();
-													city.setCityName(cityName);
-													//write logic for add new City
-													System.out.println(cityService.addCity(city)?"City added Successfully\n":"City not added Successfully\n");
+													state=new StateMaster();
+													state.setStateName(stateName);
+													//if state not found then it state add by using below method
+													System.out.println(stateService.addState(state)?"State added Successfully\n":"State not added successfully\n");
 													System.out.println("**************************************************");
 												}
-											}else {
-												district=new DistrictMaster();
-												district.setDistrictName(districtName);
-												//write logic for add new District
-												System.out.println(districtService.addDistrict(district)?"District added Successfully\n":"District not added Successfully\n");
+
+												}
+											break;
+											//-------------------------------Create Sub Admin End-----------------------------------
+									}
+								}while(!exitFlag);	
+								 exitFlag = false;  // Reset exitflag
+								
+										}else {
+												System.out.println("\nYou Enter Wrong User Name or password.\n");
 												System.out.println("**************************************************");
 											}
 											
-										}else {
-											state=new StateMaster();
-											state.setStateName(stateName);
-											//if state not found then it state add by using below method
-											System.out.println(stateService.addState(state)?"State added Successfully\n":"State not added successfully\n");
-											System.out.println("**************************************************");
-										}
-
-									}else {
-										System.out.println("\nYou Enter Wrong User Name or password.\n");
-										System.out.println("**************************************************");
 									}
+									break;
 									
-							}
-							break;
 							case 2:
 							{
+								//---------------------------create Main Admin Start--------------------------
 								System.out.println("Enter Email as a UserName:");
 								String adminName=sc.nextLine().trim();
 								System.out.println("Enter Password:");
@@ -321,18 +387,19 @@ public class HotelReservationSystem {
 								mainAdmin.setAdminName(adminName);
 								mainAdmin.setPassword(password);
 								System.out.println(mainAdminService.addNewCustomer(mainAdmin)?"Admin Created Successfully\n":"Admin not created Successfully\n");
+								//---------------------------create Main Admin End--------------------------
 							}
 							break;
 							case 3:
-								//------------------------------close the system-------------------------------
+								//------------------------------close the system start-------------------------------
 								System.out.println("Thank You for visiting\n");
 								exitFlag=true;
 								break;
-								
+								//------------------------------close the system End-------------------------------
 							default:System.out.println("You enter wrong choice.");
 							}
 						}while(!exitFlag);
-						exitFlag = false;  // Reset exitflag
+						exitFlag = false;  
 					}
 					break;
 					case 3:
@@ -340,7 +407,7 @@ public class HotelReservationSystem {
 						System.out.println("Thank You for visiting\n");
 						exitFlag=true;
 						break;
-						
+						//------------------------------close the system End-------------------------------
 					default:System.out.println("You enter wrong choice.");
 
 					}
@@ -354,6 +421,7 @@ public class HotelReservationSystem {
 				System.out.println("Thank You for visiting");
 				flag=false;
 				break;
+				//------------------------------close the system End-------------------------------
 			default:System.out.println("You Enetr Wrong Choice.");
 			}
 			}while(flag);
