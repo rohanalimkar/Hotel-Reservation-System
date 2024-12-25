@@ -66,7 +66,8 @@ List<HotelMaster>  list=new ArrayList<HotelMaster>();
 
 		
 		 try {
-			ps=con.prepareStatement("SELECT h.hotelName, s.stateName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName ='Maharashtra';");
+			ps=con.prepareStatement("SELECT h.hotelName, s.stateName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName =?");
+			ps.setString(1, stateName);
 			rs=ps.executeQuery();
 			list.clear();
 			while(rs.next())

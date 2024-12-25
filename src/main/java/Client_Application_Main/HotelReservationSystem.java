@@ -3,7 +3,6 @@ package Client_Application_Main;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -44,7 +43,6 @@ import Services.StateDistrictCityJoinService;
 import Services.StateDistrictCityJoinServiceImp;
 import Services.StateService;
 import Services.StateServiceImp;
-import model.StateModel;
 
 public class HotelReservationSystem {  //main class
 
@@ -129,7 +127,6 @@ public class HotelReservationSystem {  //main class
 								if(choice.equals(str))
 								{
 								 Optional<List<HotelMaster>> o=stateService.StateWiseHotel(stateName);
-								
 
 								 if (o.isPresent()) {
 									 AtomicInteger count = new AtomicInteger(1);
