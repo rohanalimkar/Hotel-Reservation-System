@@ -46,7 +46,7 @@ import Services.StateService;
 import Services.StateServiceImp;
 import model.StateModel;
 
-public class HotelReservationSystem {
+public class HotelReservationSystem {  //main class
 
 		public static Logger log = Logger.getLogger(HotelReservationSystem.class);
 		static
