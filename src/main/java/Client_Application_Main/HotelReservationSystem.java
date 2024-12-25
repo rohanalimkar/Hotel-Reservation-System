@@ -134,10 +134,14 @@ public class HotelReservationSystem {  //main class
 								String choice=sc.nextLine();	
 								if(choice.equals(str))  // if yes then show state wise list of hotels
 								{
+<<<<<<< HEAD
 									Optional<List<HotelMaster>> o = stateService.StateWiseHotel(stateName);
 									System.out.println("----------------------------------------");
 									System.out.printf("%-5s | %-30s | %n", "No.", "Hotel Name");
 									System.out.println("----------------------------------------");
+=======
+								 Optional<List<HotelMaster>> o=stateService.StateWiseHotel(stateName);
+>>>>>>> branch 'main' of https://github.com/rohanalimkar/Hotel-Reservation-System.git
 
 									if (o.isPresent()) {
 									    AtomicInteger count = new AtomicInteger(1);
