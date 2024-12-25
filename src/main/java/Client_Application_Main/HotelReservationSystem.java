@@ -1,9 +1,7 @@
 package Client_Application_Main;
 
-import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -20,8 +18,10 @@ import Model.CityMaster;
 import Model.CustomerMaster;
 import Model.DistrictMaster;
 import Model.EmailMaster;
+import Model.HotelAmenitiesMaster;
 import Model.HotelMaster;
 import Model.MainAdminMaster;
+import Model.RoomTypeMaster;
 import Model.StateDistrictCityJoinMaster;
 import Model.StateMaster;
 import Services.AdminService;
@@ -34,17 +34,20 @@ import Services.CustomerService;
 import Services.CustomerServiceImp;
 import Services.DistrictService;
 import Services.DistrictServiceImp;
+import Services.HotelAmenitiesService;
+import Services.HotelAmenitiesServiceImp;
 import Services.HotelService;
 import Services.HotelServiceImp;
 import Services.MainAdminService;
 import Services.MainAdminServiceImp;
+import Services.RoomTypeService;
+import Services.RoomTypeServiceImp;
 import Services.SendMailService;
 import Services.SendMailServiceImp;
 import Services.StateDistrictCityJoinService;
 import Services.StateDistrictCityJoinServiceImp;
 import Services.StateService;
 import Services.StateServiceImp;
-import model.StateModel;
 
 public class HotelReservationSystem {  //main class
 
@@ -74,6 +77,8 @@ public class HotelReservationSystem {  //main class
 		MainAdminService mainAdminService=new MainAdminServiceImp();
 		SendMailService mailService=new SendMailServiceImp();
 		AmenitiesService amenitiesService=new AmenitiesServiceImp();
+		HotelAmenitiesService hotelAmenityService=new HotelAmenitiesServiceImp();
+		RoomTypeService roomTypeService=new RoomTypeServiceImp();
 		
 		StateMaster state=null;
 		DistrictMaster district=null;
@@ -81,10 +86,12 @@ public class HotelReservationSystem {  //main class
 		AdminMaster admin=null;
 		StateDistrictCityJoinMaster sdc=null;
 		HotelMaster hotel=null;
-	//	HotelMaster hotel1=new HotelMaster();
 		MainAdminMaster mainAdmin=null;
 		EmailMaster email=null;
 		AmenitiesMaster amenities=null;
+		HotelAmenitiesMaster hotelAminity=null;
+		RoomTypeMaster roomType=null;
+		
 		
 		try {
 			do {
@@ -115,45 +122,63 @@ public class HotelReservationSystem {  //main class
 						if (customerService.validateLogin(customerEmail, password)) {
 							String str="yes";
 							String customerName=customerService.getFirstName(customerEmail);
-							System.out.println("_________________________________________________________________");
-							System.out.println("\n\t\t"+customerName);
-							System.out.println("_________________________________________________________________");
+							System.out.println("-----------------------------------------------------------------");
+							System.out.printf("%40s%n",customerName);
+							System.out.println("-----------------------------------------------------------------");
 							System.out.println("Enter State Name:");
 							String stateName=sc.nextLine().trim();
 							System.out.println(stateName);
 							int stateId=stateService.isStatePresent(stateName);
-							//System.out.println(stateId);
 							if(stateId>0) {								
 								System.out.println("Do you want to see state wise hotel...");
 								String choice=sc.nextLine();	
-								if(choice.equals(str))
+								if(choice.equals(str))  // if yes then show state wise list of hotels
 								{
-								 Optional<List<HotelMaster>> o=stateService.StateWiseHotel(stateName);
-								
+									Optional<List<HotelMaster>> o = stateService.StateWiseHotel(stateName);
+									System.out.println("----------------------------------------");
+									System.out.printf("%-5s | %-30s | %n", "No.", "Hotel Name");
+									System.out.println("----------------------------------------");
 
-								 if (o.isPresent()) {
-									 AtomicInteger count = new AtomicInteger(1);
-								     o.get().forEach(h -> {  
-								         System.out.println(count.get()+". "+h.getHotelName());
-								         count.incrementAndGet();
-								     });
-								 } else {
-								     System.err.println("There is no Data Present in table.");
-								 }
-
-
- 
-									
+									if (o.isPresent()) {
+									    AtomicInteger count = new AtomicInteger(1);
+									    o.get().forEach(h -> {
+									        
+									        System.out.printf("%-5d | %-30s | %n", count.get(), h.getHotelName());
+									        count.incrementAndGet();
+									    });
+									} else {
+									    System.err.println("There is no Data Present in table.");
+									}
+									System.out.println("----------------------------------------");
+									//write logice for room booking
+	
 								}else {
 									
 									System.out.println("Enter District Name:");
 									String districtName=sc.nextLine().trim();
 								int districtId=districtService.isDistrictPresent(districtName);
-								System.out.println("Do you want state wise hotel...");
+								System.out.println("Do you want District wise hotel...");
 								 choice=sc.nextLine();	
-								if(choice.equals(str))
+								if(choice.equals(str)) // if yes then show district wise list of hotels
 								{
-								System.out.println("Show District wise list");	
+									Optional<List<HotelMaster>> o=districtService.DistrictWiseHotel(stateName,districtName);
+									System.out.println("----------------------------------------");
+									System.out.printf("%-5s | %-30s | %n", "No.", "Hotel Name");
+									System.out.println("----------------------------------------");
+
+									if (o.isPresent()) {
+									    AtomicInteger count = new AtomicInteger(1);
+									    o.get().forEach(h -> {
+									        
+									        System.out.printf("%-5d | %-30s | %n", count.get(), h.getHotelName());
+									        count.incrementAndGet();
+									    });
+									} else {
+									    System.err.println("There is no Data Present in table.");
+									}
+									System.out.println("----------------------------------------");	
+									
+									//write logice for room booking
 								}else {
 								if(districtId>0)
 								{
@@ -161,20 +186,30 @@ public class HotelReservationSystem {  //main class
 									System.out.println("Enter City Name:");
 									String cityName=sc.nextLine().trim();
 									int cityId=cityService.isCityPresent(cityName);
-									System.out.println("Do you want state wise hotel...");
-									 choice=sc.nextLine();	
-									if(choice.equals(str))
-									{
-									System.out.println("Show state wise list");	
-									}else {
 									if(cityId>0)
 									{
-										System.out.println("City Found");
+										Optional<List<HotelMaster>> o=cityService.CityWiseHotel(stateName, districtName, cityName);									
+										System.out.println("----------------------------------------");
+										System.out.printf("%-5s | %-30s | %n", "No.", "Hotel Name");
+										System.out.println("----------------------------------------");
+
+										if (o.isPresent()) {
+										    AtomicInteger count = new AtomicInteger(1);
+										    o.get().forEach(h -> {
+										        
+										        System.out.printf("%-5d | %-30s | %n", count.get(), h.getHotelName());
+										        count.incrementAndGet();
+										    });
+										} else {
+										    System.err.println("There is no Data Present in table.");
+										}
+										System.out.println("----------------------------------------");	
+										//write logice for room booking
 									}else {
 										System.out.println("City not Found");
 									}
 								}
-								}else {
+								else {
 									System.out.println("State Not Found");
 								}
 							}
@@ -238,7 +273,6 @@ public class HotelReservationSystem {  //main class
 						System.out.println("\nThank You for visiting");
 						exitFlag=true;
 						break;
-						
 					default:System.out.println("\nYou enter wrong choice.");
 					}
 					}while(!exitFlag);	
@@ -247,7 +281,6 @@ public class HotelReservationSystem {  //main class
 			case 2:
 					{
 				//-------------------------------Admin Login----------------------------------- 
-				
 				do {
 					System.out.println("\n1.Sub Admin Login\n2.Main Admin\n3.Exit from current menu\n");
 					System.out.println("Enter Your Choice:");
@@ -256,38 +289,83 @@ public class HotelReservationSystem {  //main class
 					switch(ch) {
 					case 1:{
 				//-------------------------------Sub Admin Login-----------------------------------
-					
-						
 					 System.out.println("Enter Your email for login");
 						String hotelEmail=sc.nextLine().trim();
 						System.out.println("Enter Your Password");
 						String password=sc.nextLine().trim();
 						if (adminService.validateLogin(hotelEmail, password)) {
-							System.out.println("\n_________________________________________________________________");
+							System.out.println("-----------------------------------------------------------------");
 							System.out.println("\n\t\t"+hotelService.getHotelName(hotelEmail));
-							System.out.println("_________________________________________________________________");
-						
+							System.out.println("-----------------------------------------------------------------");
 							do {
-								System.out.println("\n1.Add amenities\n2.Delete amenities\n3.Update amenities Price.\n4.Exit from current menu.");
+								int hotelId=adminService.getHotelId(hotelEmail);
+								String amenityName=null;
+								System.out.println("\n1.Add amenities\n2.Delete amenities\n3.Update amenities Price.\n4.Add Room\n5.Update Room Status.\n6.Delete Room\n7.Exit from current menu.");
 								System.out.println("Enter Your Choice:");
 								int ch3=sc.nextInt();
 								sc.nextLine();
 								switch(ch3)
 								{
-								case 1://1.Add amenities
+								case 1:
+									//------------------------Add amenities-------------------------------------
+									Optional<List<AmenitiesMaster>> o=amenitiesService.getAllAmenities();									
+
+									 if (o.isPresent()) {
+										 AtomicInteger count = new AtomicInteger(1);
+									     o.get().forEach(a -> {  
+									         System.out.println(count.get()+". "+a.getAmenityName());
+									         count.incrementAndGet();
+									     });
+									 } else {
+									     System.err.println("There is no Data Present in table.");
+									 }
+									System.out.println("Enter Amenity Name to add in your hotel:");
+									amenityName=sc.nextLine();
+									int amenityId=amenitiesService.getAmenityId(amenityName);
+									if(amenityId>0)
+									{
+									System.out.println("Enter Amenity Price:");
+									float price=sc.nextFloat();
+									sc.nextLine();
+									hotelAminity=new HotelAmenitiesMaster();
+									hotelAminity.setHotelId(hotelId);
+									hotelAminity.setAmenityId(amenityId);
+									hotelAminity.setPrice(price);
+									System.out.println(hotelAmenityService.addHotelAmenities(hotelAminity)?"\nHotel Amenity added successfully":"\nHotel Amenity not added successfully");
+									}else {
+										System.out.println("No such amenity found");
+									}
 									break;
 								case 2://2.Delete amenities
+									System.out.println("Enter Amenity Name for delete:");
+									 amenityName=sc.nextLine();
+									 amenityId=amenitiesService.getAmenityId(amenityName);
+									 System.out.println(hotelAmenityService.deleteHotelAmenities(hotelId, amenityId)?"Hotel amenity delted successfully":"Hotel amenity not delted successfully");
 									break;
 								case 3://Update amenities Price.
+									System.out.println("Enter Amenity Name for Update:");
+									amenityName=sc.nextLine();
+									amenityId=amenitiesService.getAmenityId(amenityName);
+									System.out.println("Enter Updated Value for amenity:");
+									float price=sc.nextFloat();
+												sc.nextLine();
+								System.out.println(hotelAmenityService.updateHotelAmenities(price, hotelId, amenityId)?"Hotel Amenity Updated SuccessFully":"Hotel Amenity not Updated SuccessFully");	
 									break;
-								case 4://------------------------------close the system-------------------------------
+								
+								case 4://------------------------------Add Room------------------------------
+									break;
+								case 5://------------------------------Update Room Status------------------------------
+									break;
+								case 6://------------------------------Delete Room------------------------------
+									break;
+								
+								case 7://------------------------------close the system-------------------------------
 									System.out.println("\nThank You for visiting\n");
 									exitFlag=true;
 									break;
 									//------------------------------close the system End-------------------------------
 								default:System.out.println("\nYou enter wrong choice.");
 									break;
-									
 								}
 							}while(!exitFlag);	
 							 exitFlag = false;  // Reset flag
@@ -302,6 +380,7 @@ public class HotelReservationSystem {  //main class
 					{	//-------------------------Main Admin-------------------------------------------------
 						do {
 							System.out.println("\n1.Main Admin Login.\n2.Create new Admin login.\n3.Exit from current menu\n");
+							System.out.println("Enter Your choice:");
 							int ch1=sc.nextInt();
 							sc.nextLine();
 							switch(ch1) {
@@ -314,7 +393,7 @@ public class HotelReservationSystem {  //main class
 									if(mainAdminService.validateLogin(adminName, password)) {
 										
 										do {
-											System.out.println("\n1.Create sub Admin.\n2.Add amenities\n3.Delete amenities\n4.Update State\n5.Delete State\n6.Update District.\n7.Delete District.\n8.Update City.\n9.Delete City.\n10.Update Sub Admin.\n11.Exit from current menu.");
+											System.out.println("\n1.Create sub Admin.\n2.Add amenities\n3.Delete amenities\n4.Update amenities.\n5.Update State.\n6.Delete State\n7.Update District.\n8.Delete District.\n9.Update City.\n10.Delete City.\n11.Update Sub Admin.\n12.Show All Room Type.\n13.Add Rooms.\n14.Update RoomType\n15.Delete Room Type.\n16.Exit from current menu.");
 											System.out.println("\nEnter Your Choice:");
 											int ch2=sc.nextInt();
 													sc.nextLine();
@@ -348,9 +427,7 @@ public class HotelReservationSystem {  //main class
 																{
 																System.out.println("Enter Admin Name:");
 																String adminName1=sc.nextLine().trim();
-//																System.out.println("Enter admin password:");
 																String password1 = null;
-//																System.out.println("Re-enter admin password:");
 																String password2;
 																boolean passwordsMatch = false;
 																while(!passwordsMatch) {
@@ -381,7 +458,7 @@ public class HotelReservationSystem {  //main class
 																		
 																		if(mailService.sendEmail(email));
 																		
-																		System.out.println(adminService.isaddNewCustomer(admin)?"Sub Admin added successfully now you can Login Now You Can Login":"Sub admin not cretaed...");
+																		System.out.println(adminService.isaddNewAdmin(admin)?"Sub Admin added successfully now you can Login Now You Can Login":"Sub admin not cretaed...");
 																        
 							
 																    } else {
@@ -430,6 +507,7 @@ public class HotelReservationSystem {  //main class
 											break;
 											//-------------------------------Create Sub Admin End-----------------------------------
 											case 2:	
+												//--------------------------------Add Amenities Start----------------------------------
 														System.out.println("\n Enter Your amenities Details:");
 														System.out.println("Amenity Name:");
 														String amenityName=sc.nextLine().trim();
@@ -438,32 +516,91 @@ public class HotelReservationSystem {  //main class
 														amenities=new AmenitiesMaster();
 														amenities.setAmenityName(amenityName);
 														amenities.setDescription(description);
-														System.out.println(amenitiesService.addAmenities(amenities)?"amenity added successfully":"amenity not added");
+														System.out.println(amenitiesService.addAmenities(amenities)?"\nAmenity added successfully":"amenity not added");
 												break;
-												case 3:	//3.Delete amenities
+												//--------------------------------Add Amenities End----------------------------------
+												case 3:	//--------------------------------Delete Amenities Start----------------------------------
+														System.out.println("Enter Amenity Name for delete it:");
+														amenityName=sc.nextLine().trim();
+														System.out.println(amenitiesService.deleteAmenities(amenityName)?"\nAmenity Deleted successfully":"\nAmenity not Deleted successfully");
 												break;
-												case 4:	System.out.println("\n Enter Amenity Name for Update:");
+												case 4:
+													//--------------------------------Update Amenity---------------------------------
+														System.out.println("\n Enter Amenity Name for Update:");
 														 amenityName=sc.nextLine().trim();
+														System.out.println("\n Enter Your amenities Details for update:");
 														int amenityId=amenitiesService.getAmenityId(amenityName);
 														System.out.println("Enter Updated amenityName:");
 														amenityName=sc.nextLine().trim();
 														System.out.println("Enter Updated amenity description:");
 														description=sc.nextLine().trim();
-														System.out.println(amenitiesService.updateAmenities(amenityName, description, amenityId)?"Amenity Updated Successfully":"Amenity not Updated");
+														System.out.println(amenitiesService.updateAmenities(amenityName, description, amenityId)?"\nAmenity Updated Successfully":"\nAmenity not Updated");
 												break;
-												case 5:	//5.Delete State
+												case 5:	//--------------------Update State--------------------
 												break;
-												case 6:	//6.Update District.
+												case 6:	//--------------------Delete State--------------------
 												break;
-												case 7:	//7.Delete District.
+												case 7:	//--------------------Update District--------------------
 												break;
-												case 8:	//8.Update City.
+												case 8:	//--------------------Delete District--------------------
 												break;
-												case 9:	//9.Delete City.
+												case 9:	//--------------------Update City--------------------
 												break;
-												case 10:	//10.Update Sub Admin.
+												case 10:	//--------------------Delete City--------------------
 												break;
-												case 11:	//------------------------------close the system-------------------------------
+												case 11:	//--------------------Update Sub Admin--------------------
+															System.out.println("Enter username for update:");
+															String username=sc.nextLine();
+															System.out.println("Enter New password:");
+															password=sc.nextLine().trim();
+															System.out.println("Enter hotelEmail:");
+															String hotelEmail=sc.nextLine().trim();
+															System.out.println(adminService.isUpdatedAdmin(username, password, hotelEmail)?"Admin updated Successfully":"Admin not updated Successfully");
+												break;
+												case 12:	//--------------------Show All Room Type--------------------
+													
+													Optional<List<RoomTypeMaster>> o = roomTypeService.getAllRoomType();
+													System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
+													System.out.printf("%-5s | %-20s | %-100s|%n", "No.", "Room Type", "Description");
+													System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
+													if (o.isPresent()) {
+													    AtomicInteger count = new AtomicInteger(1);
+													    o.get().forEach(a -> {
+													        System.out.printf("%-5d | %-20s | %-100s|%n", count.get(), a.getTypeName(), a.getDescription());
+													        count.incrementAndGet();
+													    });
+													} else {
+													    System.err.println("There is no Data Present in table.");
+													}
+													System.out.println("------------------------------------------------------------------------------------------------------------------------------------");
+													break;
+												case 13:	//-------------------Add Room Type----------------------------
+															System.out.println("Enter Room Type:");
+															String typeName=sc.nextLine().trim();
+															System.out.println("Enter Room type description:");
+															 description=sc.nextLine().trim();
+															 roomType=new RoomTypeMaster();
+															 roomType.setTypeName(typeName);
+															 roomType.setDescription(description);
+															 System.out.println(roomTypeService.addRoomType(roomType)?"Room Type Added Successfully":"Room Type not Added Successfully");
+												break;
+												case 14:	//--------------------update Room Type-------------------------
+														System.out.println("Enter Room Type For Update:");
+														typeName=sc.nextLine().trim();
+														amenityId=roomTypeService.getRoomTypeId(typeName);
+														System.out.println("Enter Room Type For Update:");
+														typeName=sc.nextLine().trim();
+														System.out.println("Enter Updated Room Type description:");
+														description=sc.nextLine().trim();
+														System.out.println(roomTypeService.UpdateRoomType(typeName, description, amenityId)?"Room Type Updated Successfully":"Room Type not Updated Successfully");
+												break;
+												case 15:	//--------------------delete room type--------------------
+													System.out.println("Enter Room Type For Update:");
+													typeName=sc.nextLine().trim();
+													amenityId=roomTypeService.getRoomTypeId(typeName);
+													System.out.println(roomTypeService.deleteRoomTypeId(amenityId)?"Room Type Deleted Successfully":"Room Type not Deleted Successfully");
+													break;
+												case 16:	//------------------------------close the system-------------------------------
 													System.out.println("Thank You for visiting\n");
 													exitFlag=true;
 													break;

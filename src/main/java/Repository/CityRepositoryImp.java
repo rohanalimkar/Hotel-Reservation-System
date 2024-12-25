@@ -1,11 +1,15 @@
 package Repository;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import Model.CityMaster;
+import Model.HotelMaster;
 
 public class CityRepositoryImp extends DBState implements CityRepository {
-
+	List<HotelMaster>  list=new ArrayList<HotelMaster>();
 	@Override
 	public boolean addCity(CityMaster city) {
 
@@ -39,6 +43,28 @@ public class CityRepositoryImp extends DBState implements CityRepository {
 			}
 		} catch (Exception e) {
 			return 0;
+		}
+	}
+
+	@Override
+	public Optional<List<HotelMaster>> CityWiseHotel(String stateName, String districtName, String cityName) {
+		try {
+			ps=con.prepareStatement("SELECT h.hotelName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName =? and districtName=? and cityName=?");
+			ps.setString(1, stateName);
+			ps.setString(2, districtName);
+			ps.setString(3, cityName);
+			rs=ps.executeQuery();
+			list.clear();
+			while(rs.next())
+			{
+				String hotelName=rs.getString("hotelName");
+				 //stateName=rs.getString("stateName");
+				list.add(new HotelMaster(hotelName));
+			}
+			return list.isEmpty() ? Optional.empty():Optional.of(list);
+		} catch (Exception e) {
+			System.out.println("Error is:"+e);
+			return Optional.empty();
 		}
 	}
 

@@ -1,9 +1,13 @@
 package Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import Model.AmenitiesMaster;
 
 public class AmenitiesRepositoryImp extends DBState implements AmenitiesRepository {
-
+	List<AmenitiesMaster>  list=new ArrayList<AmenitiesMaster>();
 	@Override
 	public boolean addAmenities(AmenitiesMaster amenities) {
 		try {
@@ -14,7 +18,7 @@ public class AmenitiesRepositoryImp extends DBState implements AmenitiesReposito
 			int result=ps.executeUpdate();
 			return result>0?true:false;
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 			return false;
 		}
 		
@@ -28,36 +32,33 @@ public class AmenitiesRepositoryImp extends DBState implements AmenitiesReposito
 			ps.setString(2, description);
 			ps.setInt(3, amenityId);
 			int result=ps.executeUpdate();
-			while(rs.next())
-			{
-				
-			}
+			return result>0?true:false;
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			return false;
 		}
 		
-		return false;
+		
 	}
 
 	@Override
 	public boolean deleteAmenities(String amenityName) {
 		try {
-			
+			ps=con.prepareStatement("delete amenities  where amenityName=?");
+			ps.setString(1, amenityName);
+			int result=ps.executeUpdate();
+			return result>0?true:false;
 			
 			
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			return false;
 		}
 
-		return false;
+		
 	}
 
-	@Override
-	public boolean allAmenities(AmenitiesMaster amenities) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public int getAmenityId(String amenityName) {
@@ -73,9 +74,29 @@ public class AmenitiesRepositoryImp extends DBState implements AmenitiesReposito
 				return 0;
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			return 0;
 		}
-		return 0;
+		
+	}
+
+	@Override
+	public Optional<List<AmenitiesMaster>> getAllAmenities() {
+		try {
+			ps=con.prepareStatement("select * from amenities");
+			rs=ps.executeQuery();
+			list.clear();
+			while(rs.next())
+			{
+				String amenityName=rs.getString("amenityName");
+				 //stateName=rs.getString("stateName");
+				list.add(new AmenitiesMaster(amenityName));
+			}
+			return list.isEmpty() ? Optional.empty():Optional.of(list);
+		} catch (Exception e) {
+			System.out.println("Error is:"+e);
+			return Optional.empty();
+		}
 	}
 
 }

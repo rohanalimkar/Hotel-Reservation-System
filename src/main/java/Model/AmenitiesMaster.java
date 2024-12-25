@@ -12,6 +12,9 @@ private int amenityId;
 private String amenityName;
 private String description;
 public AmenitiesMaster(){}
+public AmenitiesMaster(String amenityName){
+	this.amenityName=amenityName;
+}
 public AmenitiesMaster(int amenityId,String amenityName,String description){
 this.amenityId=amenityId;
 this.amenityName=amenityName;

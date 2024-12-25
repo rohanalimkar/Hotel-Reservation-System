@@ -9,5 +9,5 @@ import Model.HotelMaster;
 public interface CityService {
 	public abstract boolean addCity(CityMaster city);
 	public abstract int isCityPresent(String cityName);
-	 public abstract Optional<List<HotelMaster>> cityWiseHotel(String cityName);
+	public abstract Optional<List<HotelMaster>> CityWiseHotel(String stateName,String districtName,String cityName);
 }

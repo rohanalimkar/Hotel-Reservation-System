@@ -12,7 +12,7 @@ public class AdminRepositoryImp extends DBState implements AdminRepository {
 
 	//---------------Add New Admin-----------------------
 	@Override
-	public boolean isaddNewCustomer(AdminMaster admin) {
+	public boolean isaddNewAdmin(AdminMaster admin) {
 		
 		
 		 try {
@@ -55,6 +55,42 @@ public class AdminRepositoryImp extends DBState implements AdminRepository {
 	            e.printStackTrace();
 	        }
 	    }
+	}
+
+	@Override
+	public int getHotelId(String hotelEmail) {
+		try {
+			ps=con.prepareStatement("select hotelId from admin where hotelEmail=?");
+			ps.setString(1,hotelEmail);
+			rs=ps.executeQuery();
+			if(rs.next())
+			{
+				int hotelId=rs.getInt(1);
+				return hotelId;
+
+			}else {
+	            return 0;
+			}
+		} catch (Exception e) {
+			return 0;
+		}
+
+	}
+
+	@Override
+	public boolean isUpdatedAdmin(String username, String hotelEmail, String password) {
+		try {
+			ps=con.prepareStatement("update admin set username=?,password=? where hotelEmail=?");
+			ps.setString(1, username);
+			ps.setString(2, password);
+			ps.setString(3, hotelEmail);
+			int result=ps.executeUpdate();
+			return result>0?true:false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 	
 }
