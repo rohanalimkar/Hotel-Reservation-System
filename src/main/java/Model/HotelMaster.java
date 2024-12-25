@@ -13,6 +13,9 @@ private String hotelName;
 private int hotelLocation;
 private String status;
 public HotelMaster(){}
+public HotelMaster(String hotelName){
+	this.hotelName=hotelName;
+}
 public HotelMaster(int hotelId,String hotelName,int hotelLocation,String status){
 	this.hotelId=hotelId;
 	this.hotelName=hotelName;

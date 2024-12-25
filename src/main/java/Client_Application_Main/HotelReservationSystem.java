@@ -4,7 +4,10 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
@@ -78,6 +81,7 @@ public class HotelReservationSystem {
 		AdminMaster admin=null;
 		StateDistrictCityJoinMaster sdc=null;
 		HotelMaster hotel=null;
+	//	HotelMaster hotel1=new HotelMaster();
 		MainAdminMaster mainAdmin=null;
 		EmailMaster email=null;
 		AmenitiesMaster amenities=null;
@@ -109,6 +113,7 @@ public class HotelReservationSystem {
 						System.out.println("Enter Your Password");
 						String password=sc.nextLine().trim();
 						if (customerService.validateLogin(customerEmail, password)) {
+							String str="yes";
 							String customerName=customerService.getFirstName(customerEmail);
 							System.out.println("_________________________________________________________________");
 							System.out.println("\n\t\t"+customerName);
@@ -117,34 +122,62 @@ public class HotelReservationSystem {
 							String stateName=sc.nextLine().trim();
 							System.out.println(stateName);
 							int stateId=stateService.isStatePresent(stateName);
-							System.out.println(stateId);
-							if(stateId>0) {
-								System.out.println("Enter District Name:");
-								String districtName=sc.nextLine().trim();
-								
-								
-								System.out.println("Do you want state wise hotel...");
+							//System.out.println(stateId);
+							if(stateId>0) {								
+								System.out.println("Do you want to see state wise hotel...");
 								String choice=sc.nextLine();	
-								 
+								if(choice.equals(str))
+								{
+								 Optional<List<HotelMaster>> o=stateService.StateWiseHotel(stateName);
+								
+
+								 if (o.isPresent()) {
+									 AtomicInteger count = new AtomicInteger(1);
+								     o.get().forEach(h -> {  
+								         System.out.println(count.get()+". "+h.getHotelName());
+								         count.incrementAndGet();
+								     });
+								 } else {
+								     System.err.println("There is no Data Present in table.");
+								 }
+
+
+ 
+									
+								}else {
+									
+									System.out.println("Enter District Name:");
+									String districtName=sc.nextLine().trim();
 								int districtId=districtService.isDistrictPresent(districtName);
+								System.out.println("Do you want state wise hotel...");
+								 choice=sc.nextLine();	
+								if(choice.equals(str))
+								{
+								System.out.println("Show District wise list");	
+								}else {
 								if(districtId>0)
 								{
-									String confirm="yes";
-									while(choice==confirm){
-										
-										
-									}
+									
 									System.out.println("Enter City Name:");
 									String cityName=sc.nextLine().trim();
 									int cityId=cityService.isCityPresent(cityName);
+									System.out.println("Do you want state wise hotel...");
+									 choice=sc.nextLine();	
+									if(choice.equals(str))
+									{
+									System.out.println("Show state wise list");	
+									}else {
 									if(cityId>0)
 									{
 										System.out.println("City Found");
 									}else {
 										System.out.println("City not Found");
 									}
+								}
 								}else {
 									System.out.println("State Not Found");
+								}
+							}
 								}
 							}else {
 								System.out.println("State Not Found");

@@ -1,5 +1,9 @@
 package Services;
 
+import java.util.List;
+import java.util.Optional;
+
+import Model.HotelMaster;
 import Model.StateMaster;
 import Repository.StateRepository;
 import Repository.StateRepositoryImp;
@@ -21,5 +25,13 @@ public class StateServiceImp implements StateService {
 		
 		return stateRepo.isStatePresent(stateName);
 	}
+
+
+	@Override
+	public Optional<List<HotelMaster>> StateWiseHotel(String stateName) {
+		
+		return stateRepo.StateWiseHotel(stateName);
+	}
+
 
 }

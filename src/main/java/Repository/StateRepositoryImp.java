@@ -3,15 +3,17 @@ package Repository;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 
 import Client_Application_Main.HotelReservationSystem;
+import Model.HotelMaster;
 import Model.StateMaster;
 import model.StateModel;
 
-public class StateRepositoryImp extends DBState implements StateRepository {
-List<StateMaster>  list=new ArrayList<StateMaster>();
+public class StateRepositoryImp extends DBState implements StateRepository { //main class
+List<HotelMaster>  list=new ArrayList<HotelMaster>();
 	@Override
 	public boolean addState(StateMaster state) {
 
@@ -58,4 +60,27 @@ List<StateMaster>  list=new ArrayList<StateMaster>();
 	    }
 		
 	}
+
+	@Override
+	public Optional<List<HotelMaster>> StateWiseHotel(String stateName) {
+
+		
+		 try {
+			ps=con.prepareStatement("SELECT h.hotelName, s.stateName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName ='Maharashtra';");
+			rs=ps.executeQuery();
+			list.clear();
+			while(rs.next())
+			{
+				String hotelName=rs.getString("hotelName");
+				 //stateName=rs.getString("stateName");
+				list.add(new HotelMaster(hotelName));
+			}
+			return list.isEmpty() ? Optional.empty():Optional.of(list);
+		} catch (Exception e) {
+			System.out.println("Error is:"+e);
+			return Optional.empty();
+		}
+	}
+
+	
 }
