@@ -10,6 +10,11 @@ public interface CityRepository {
 
  public abstract boolean addCity(CityMaster city);
 	public abstract int isCityPresent(String cityName);
+<<<<<<< HEAD
 	public abstract Optional<List<HotelMaster>> CityWiseHotel(String stateName,String districtName,String CityName);
 
+=======
+
+	public abstract Optional<List<HotelMaster>> CityWiseHotel(String stateName,String districtName,String cityName);
+>>>>>>> branch 'main' of https://github.com/rohanalimkar/Hotel-Reservation-System.git
 }
