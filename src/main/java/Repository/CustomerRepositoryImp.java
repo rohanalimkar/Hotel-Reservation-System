@@ -89,5 +89,27 @@ public class CustomerRepositoryImp extends DBState implements CustomerRepository
 		}
 		return null;
 	}
+	//----------------------customerId id-----------------------------------------
+	@Override
+	public int getCustomerId(String customerEmail) {
+		try {
+			
+			ps=con.prepareStatement("select customerId from customer where customerEmail=?");
+			ps.setString(1, customerEmail);
+			rs=ps.executeQuery();
+			if(rs.next())
+			{
+				return rs.getInt("customerId");
+			}else {
+				return 0;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}	
+	}
 
+
+	
+	
 }

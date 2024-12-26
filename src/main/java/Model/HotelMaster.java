@@ -12,6 +12,9 @@ private int hotelId;
 private String hotelName;
 private int hotelLocation;
 private String status;
+private String state;
+private String districtName;
+private String cityName;
 public HotelMaster(){}
 public HotelMaster(String hotelName){
 	this.hotelName=hotelName;

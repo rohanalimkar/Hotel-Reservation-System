@@ -22,5 +22,10 @@ public class CustomerServiceImp implements CustomerService {
 		
 		return customerRepo.getFirstName(customerEmail);
 	}
+	@Override
+	public int getCustomerId(String customerEmail) {
+		
+		return customerRepo.getCustomerId(customerEmail);
+	}
 
 }

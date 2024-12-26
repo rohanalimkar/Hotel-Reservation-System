@@ -1,14 +1,7 @@
 package Repository;
 
 import java.sql.SQLException;
-<<<<<<< HEAD
 import java.util.*;
-=======
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
->>>>>>> branch 'main' of https://github.com/rohanalimkar/Hotel-Reservation-System.git
-
 import Model.DistrictMaster;
 import Model.HotelMaster;
 public class DistrictRepositoryImp extends DBState implements DistrictRepository {
@@ -57,8 +50,7 @@ public class DistrictRepositoryImp extends DBState implements DistrictRepository
 	@Override
 	public Optional<List<HotelMaster>> DistrictWiseHotel(String stateName, String districtName) {
 		try {
-<<<<<<< HEAD
-			ps=con.prepareStatement("SELECT h.hotelName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName =? and districtName=?");
+			ps=con.prepareStatement("SELECT h.hotelName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName =? and districtName=? and  and h.status=Active");
 			ps.setString(1, stateName);
 			ps.setString(2, districtName);
 			rs=ps.executeQuery();
@@ -66,17 +58,6 @@ public class DistrictRepositoryImp extends DBState implements DistrictRepository
 			while(rs.next())
 			{
 				String hotelName=rs.getString("hotelName");
-				 //stateName=rs.getString("stateName");
-=======
-			ps=con.prepareStatement("SELECT h.hotelName, s.stateName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName =? and d.districtName=?");
-			ps.setString(1, stateName);
-			ps.setString(2, districtName);
-			rs=ps.executeQuery();
-			list.clear();
-			while(rs.next())
-			{
-				String hotelName=rs.getString("hotelName");
->>>>>>> branch 'main' of https://github.com/rohanalimkar/Hotel-Reservation-System.git
 				list.add(new HotelMaster(hotelName));
 			}
 			return list.isEmpty() ? Optional.empty():Optional.of(list);

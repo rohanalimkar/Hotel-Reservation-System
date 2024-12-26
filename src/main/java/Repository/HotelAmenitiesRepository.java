@@ -9,6 +9,7 @@ public interface HotelAmenitiesRepository {
 	public abstract boolean addHotelAmenities(HotelAmenitiesMaster hotelAmenities);
 	public abstract boolean updateHotelAmenities(float price,int hotelId,int amenityId);
 	public abstract int getHotelAmenityId(int amenityId);
+	public abstract float getHotelAmenityPrice(int hotelId,int amenityId);
 	public abstract boolean deleteHotelAmenities(int hotelId,int amenityId);
-	public abstract Optional<List<HotelAmenitiesMaster>> getAllAmenities();
+	public abstract Optional<List<HotelAmenitiesMaster>> getAllAmenities(int hotelId);
 }

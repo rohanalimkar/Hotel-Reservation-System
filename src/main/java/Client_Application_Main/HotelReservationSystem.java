@@ -21,6 +21,7 @@ import Model.EmailMaster;
 import Model.HotelAmenitiesMaster;
 import Model.HotelMaster;
 import Model.MainAdminMaster;
+import Model.RoomMaster;
 import Model.RoomTypeMaster;
 import Model.StateDistrictCityJoinMaster;
 import Model.StateMaster;
@@ -40,6 +41,8 @@ import Services.HotelService;
 import Services.HotelServiceImp;
 import Services.MainAdminService;
 import Services.MainAdminServiceImp;
+import Services.RoomService;
+import Services.RoomServiceImp;
 import Services.RoomTypeService;
 import Services.RoomTypeServiceImp;
 import Services.SendMailService;
@@ -48,7 +51,7 @@ import Services.StateDistrictCityJoinService;
 import Services.StateDistrictCityJoinServiceImp;
 import Services.StateService;
 import Services.StateServiceImp;
-
+import Controller.*;
 public class HotelReservationSystem {  //main class
 
 		public static Logger log = Logger.getLogger(HotelReservationSystem.class);
@@ -60,7 +63,6 @@ public class HotelReservationSystem {  //main class
 			log.addAppender(console);
 			log.setLevel(Level.ALL);
 		}
-	
 	
 	public static void main(String[] args) {
 		
@@ -79,6 +81,7 @@ public class HotelReservationSystem {  //main class
 		AmenitiesService amenitiesService=new AmenitiesServiceImp();
 		HotelAmenitiesService hotelAmenityService=new HotelAmenitiesServiceImp();
 		RoomTypeService roomTypeService=new RoomTypeServiceImp();
+		RoomService roomService=new RoomServiceImp();
 		
 		StateMaster state=null;
 		DistrictMaster district=null;
@@ -91,12 +94,12 @@ public class HotelReservationSystem {  //main class
 		AmenitiesMaster amenities=null;
 		HotelAmenitiesMaster hotelAminity=null;
 		RoomTypeMaster roomType=null;
-		
+		RoomMaster room=null;
 		
 		try {
 			do {
 				flag=true;
-			log.info("******Welcom To Hotel Reservation System*****");
+			log.info("🌸🌸🌸🌸🌸Welcom To Hotel Reservation System🌸🌸🌸🌸🌸"); 
 			log.info("\nLogin in Application\n1.Customer.\n2.Admin.\n3.Exit from current menu\n");
 			System.out.println("Enter Your Choice");
 			int login=sc.nextInt();
@@ -127,34 +130,106 @@ public class HotelReservationSystem {  //main class
 							System.out.println("-----------------------------------------------------------------");
 							System.out.println("Enter State Name:");
 							String stateName=sc.nextLine().trim();
-							System.out.println(stateName);
+							
 							int stateId=stateService.isStatePresent(stateName);
 							if(stateId>0) {								
 								System.out.println("Do you want to see state wise hotel...");
 								String choice=sc.nextLine();	
 								if(choice.equals(str))  // if yes then show state wise list of hotels
 								{
-<<<<<<< HEAD
 									Optional<List<HotelMaster>> o = stateService.StateWiseHotel(stateName);
-									System.out.println("----------------------------------------");
-									System.out.printf("%-5s | %-30s | %n", "No.", "Hotel Name");
-									System.out.println("----------------------------------------");
-=======
-								 Optional<List<HotelMaster>> o=stateService.StateWiseHotel(stateName);
->>>>>>> branch 'main' of https://github.com/rohanalimkar/Hotel-Reservation-System.git
+									 if (o.isPresent() && !o.get().isEmpty()) {
+								            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+								            System.out.printf("%-5s | %-30s | %-30s | %-30s | %-30s %n", "hotelId", "Hotel Name","State","District","City");
+								            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+								            
+								            AtomicInteger count = new AtomicInteger(1);
+								            o.get().forEach(h -> {
+								                System.out.printf("%-5d | %-30s | %-30s | %-30s | %-30s %n", h.getHotelId(), h.getHotelName(),h.getState(),h.getDistrictName(),h.getCityName());
+								                count.incrementAndGet();
+								            });
+								            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+									 
+									 System.out.println("Enter Hotel Id for booking");
+								            int hotelId=sc.nextInt();
+								            	sc.nextLine();
+								            Optional<List<RoomMaster>> o1=roomService.getAllAvailableRoom(hotelId);									
+											 if (o1.isPresent() && !o1.get().isEmpty()) {
+										            System.out.println("-------------------------------------------------------------------");
+										            System.out.printf("%-20s | %-30s | %-10s |%n","Room Number","Room Type","Room Price");
+										            System.out.println("-------------------------------------------------------------------");
+										            
+										            o1.get().forEach(h -> {
+										                System.out.printf("%-20s | %-30s | %-10.2f |%n",h.getRoomNumber(),h.getRoomType(),h.getRoomPrice());
+										            });
+										            System.out.println("-------------------------------------------------------------------");
+										        } else {
+										            System.out.println("There is no Data Present in table.");
+										        }
+											 int customerId=customerService.getCustomerId(customerEmail);
+											 System.out.println("Enter Room Id:");
+											 String roomId=sc.nextLine();	
+											 String reservationDate = LocalDate.now().toString();
+											boolean correctDate=false;
+											 while(!correctDate) {	 
+												 System.out.println("Enter checkIn-Date [yyyy-mm-dd]:");
+										            String checkInDate = sc.nextLine();
+										            System.out.println("Enter checkOut-Date [yyyy-mm-dd]:");
+										            String checkOutDate = sc.nextLine();
 
-									if (o.isPresent()) {
-									    AtomicInteger count = new AtomicInteger(1);
-									    o.get().forEach(h -> {
-									        
-									        System.out.printf("%-5d | %-30s | %n", count.get(), h.getHotelName());
-									        count.incrementAndGet();
-									    });
-									} else {
-									    System.err.println("There is no Data Present in table.");
-									}
-									System.out.println("----------------------------------------");
-									//write logice for room booking
+												 if (reservationDate.compareTo(checkInDate) <= 0 && checkInDate.compareTo(checkOutDate) <= 0)
+										                correctDate = true;
+										            else
+										                System.out.println("Invalid dates. Ensure check-in is after reservation and check-out is after check-in.");
+										        }
+									 	System.out.println("Enter number Of Guests:");
+								            int numberOfGuests=sc.nextInt();
+								            sc.nextLine();
+								            System.out.println("Available Amenities for Hotel " + hotelId + ":");
+								            
+								            Optional<List<HotelAmenitiesMaster>> o2 = hotelAmenityService.getAllAmenities(hotelId);
+
+								            if (o2.isPresent() && !o2.get().isEmpty()) {
+								                System.out.println("---------------------------------------------------");
+								                System.out.printf("%-10s | %-30s | %-10s%n", "Amenity ID", "Amenity Name", "Price");
+								                System.out.println("---------------------------------------------------");
+
+								                o2.get().forEach(a -> {
+								                    System.out.printf("%-10d | %-30s | %-10.2f%n", a.getAmenityId(), a.getAmenityName(), a.getPrice());
+								                });
+
+								                System.out.println("---------------------------------------------------");
+								            } else {
+								                System.out.println("No amenities found for this hotel.");
+								            }
+								            float amenitiesCost = 0.0f;
+								            boolean chooseAmenity=false;
+								            while(!chooseAmenity) {
+								            	System.out.println("do you want to add amenity:[Yes/No]");
+								            	String amenityChoice=sc.nextLine().toUpperCase();
+								            	if(amenityChoice.equals("NO"))
+								            	{
+								            		chooseAmenity=true;
+								            	}else {
+								            		System.out.println("Enter Amenity Id:");
+								            		int amenityId=sc.nextInt();
+								            		sc.nextLine();
+								            		amenitiesCost+=hotelAmenityService.getHotelAmenityPrice(hotelId, amenityId);
+								            	}
+								            }
+								            
+								            System.out.println("total Ameninty Cost:"+amenitiesCost);
+								            float roomPrice=roomService.getRoomPrice(hotelId, roomId);
+								            System.out.println("Room Cost:"+roomPrice);
+								            System.out.println("Advance Payment:");
+								            float advancePayment=sc.nextFloat();
+								            sc.nextLine();
+								            float totalBill=(amenitiesCost+roomPrice)-advancePayment;
+								            System.out.println("You have to pay:"+totalBill);
+								            
+									 } else {
+								            System.out.println("There is no such Data Present.");
+								        }
 	
 								}else {
 									
@@ -166,22 +241,20 @@ public class HotelReservationSystem {  //main class
 								if(choice.equals(str)) // if yes then show district wise list of hotels
 								{
 									Optional<List<HotelMaster>> o=districtService.DistrictWiseHotel(stateName,districtName);
-									System.out.println("----------------------------------------");
-									System.out.printf("%-5s | %-30s | %n", "No.", "Hotel Name");
-									System.out.println("----------------------------------------");
-
-									if (o.isPresent()) {
-									    AtomicInteger count = new AtomicInteger(1);
-									    o.get().forEach(h -> {
-									        
-									        System.out.printf("%-5d | %-30s | %n", count.get(), h.getHotelName());
-									        count.incrementAndGet();
-									    });
-									} else {
-									    System.err.println("There is no Data Present in table.");
-									}
-									System.out.println("----------------------------------------");	
-									
+									 if (o.isPresent() && !o.get().isEmpty()) {
+								            System.out.println("----------------------------------------");
+								            System.out.printf("%-5s | %-30s | %n", "No.", "Hotel Name");
+								            System.out.println("----------------------------------------");
+								            
+								            AtomicInteger count = new AtomicInteger(1);
+								            o.get().forEach(h -> {
+								                System.out.printf("%-5d | %-30s | %n", count.get(), h.getHotelName());
+								                count.incrementAndGet();
+								            });
+								            System.out.println("----------------------------------------");
+								        } else {
+								            System.out.println("There is no Data Present in table.");
+								        }									
 									//write logice for room booking
 								}else {
 								if(districtId>0)
@@ -193,22 +266,21 @@ public class HotelReservationSystem {  //main class
 									if(cityId>0)
 									{
 										Optional<List<HotelMaster>> o=cityService.CityWiseHotel(stateName, districtName, cityName);									
-										System.out.println("----------------------------------------");
-										System.out.printf("%-5s | %-30s | %n", "No.", "Hotel Name");
-										System.out.println("----------------------------------------");
-
-										if (o.isPresent()) {
-										    AtomicInteger count = new AtomicInteger(1);
-										    o.get().forEach(h -> {
-										        
-										        System.out.printf("%-5d | %-30s | %n", count.get(), h.getHotelName());
-										        count.incrementAndGet();
-										    });
-										} else {
-										    System.err.println("There is no Data Present in table.");
-										}
-										System.out.println("----------------------------------------");	
-										//write logice for room booking
+										 if (o.isPresent() && !o.get().isEmpty()) {
+									            System.out.println("----------------------------------------");
+									            System.out.printf("%-5s | %-30s | %n", "No.", "Hotel Name");
+									            System.out.println("----------------------------------------");
+									            
+									            AtomicInteger count = new AtomicInteger(1);
+									            o.get().forEach(h -> {
+									                System.out.printf("%-5d | %-30s | %n", count.get(), h.getHotelName());
+									                count.incrementAndGet();
+									            });
+									            System.out.println("----------------------------------------");
+									        } else {
+									            System.out.println("There is no Data Present in table.");
+									        }										
+										 //write logice for room booking
 									}else {
 										System.out.println("City not Found");
 									}
@@ -274,7 +346,7 @@ public class HotelReservationSystem {  //main class
 						break;
 					case 3:
 						//------------------------------close the system-------------------------------
-						System.out.println("\nThank You for visiting");
+						System.out.println("\n🙏🙏 Thank You for visiting 🙏🙏");
 						exitFlag=true;
 						break;
 					default:System.out.println("\nYou enter wrong choice.");
@@ -304,7 +376,7 @@ public class HotelReservationSystem {  //main class
 							do {
 								int hotelId=adminService.getHotelId(hotelEmail);
 								String amenityName=null;
-								System.out.println("\n1.Add amenities\n2.Delete amenities\n3.Update amenities Price.\n4.Add Room\n5.Update Room Status.\n6.Delete Room\n7.Exit from current menu.");
+								System.out.println("\n1.Add amenities\n2.Delete amenities\n3.Update amenities Price.\n4.Show All Rooms\n5.Add Room\n6.Update Room price.\n7.Update Room Status.\n8.Exit from current menu.");
 								System.out.println("Enter Your Choice:");
 								int ch3=sc.nextInt();
 								sc.nextLine();
@@ -355,16 +427,66 @@ public class HotelReservationSystem {  //main class
 												sc.nextLine();
 								System.out.println(hotelAmenityService.updateHotelAmenities(price, hotelId, amenityId)?"Hotel Amenity Updated SuccessFully":"Hotel Amenity not Updated SuccessFully");	
 									break;
-								
-								case 4://------------------------------Add Room------------------------------
+								case 4://------------------------------Show All Room------------------------------
+								{
+									hotelId=adminService.getHotelId(hotelEmail);
+									Optional<List<RoomMaster>> o1=roomService.getAllAvailableRoom(hotelId);									
+									 if (o1.isPresent() && !o1.get().isEmpty()) {
+								            System.out.println("-------------------------------------------------------------------");
+								            System.out.printf("%-20s | %-30s | %-10s |%n","Room Number","Room Type","Room Price");
+								            System.out.println("-------------------------------------------------------------------");
+								            
+								            o1.get().forEach(h -> {
+								                System.out.printf("%-20s | %-30s | %-10.2f |%n",h.getRoomNumber(),h.getRoomType(),h.getRoomPrice());
+								            });
+								            System.out.println("-------------------------------------------------------------------");
+								        } else {
+								            System.out.println("There is no Data Present in table.");
+								        }
+								}
 									break;
-								case 5://------------------------------Update Room Status------------------------------
+								case 5://------------------------------Add Room------------------------------
+										System.out.println("Enter Room Number:");
+										String roomNumber=sc.nextLine();
+										System.out.println("Enter You Room Type:");
+										String roomtype=sc.nextLine().trim();
+										int typeId=roomTypeService.getRoomTypeId(roomtype);
+										System.out.println("Enter Room Status [Available,Booked,Under Maintenance]:");
+										String roomStatus=sc.nextLine().trim();
+										System.out.println("Enter Room Price:");
+										float roomPrice=sc.nextFloat();
+										room=new RoomMaster();
+										room.setHotelId(hotelId);
+										room.setRoomNumber(roomNumber);
+										room.setRoomTypeId(typeId);
+										room.setRoomStatus(roomStatus);
+										room.setRoomPrice(roomPrice);
+										System.out.println(roomService.isRoomPresent(hotelId, roomNumber)?"Room Already Present":(roomService.isAddNewRoom(room)?"Room Added SuccessFully":"Room Not Added SuccessFully"));
 									break;
-								case 6://------------------------------Delete Room------------------------------
+								case 6://------------------------------Update Room Price------------------------------
+										hotelId=adminService.getHotelId(hotelEmail);
+										System.out.println("Enter Room Number:");
+										roomNumber=sc.nextLine();
+										System.out.println("Enter Updated Room Price:");
+										price=sc.nextFloat();
+										sc.nextLine();
+										System.out.println(roomService.isRoomPresent(hotelId, roomNumber)?((roomService.isRoomUpdatePrice(hotelId, roomNumber,price)?"Room Price Updated SuccessFully":"Room Price Not Updated SuccessFully")):"No Such Room Present");
 									break;
-								
-								case 7://------------------------------close the system-------------------------------
-									System.out.println("\nThank You for visiting\n");
+								case 7://------------------------------Update Room Status------------------------------
+									hotelId=adminService.getHotelId(hotelEmail);
+									System.out.println("Enter Room Number:");
+									roomNumber=sc.nextLine();
+									System.out.println("Enter Room Status: [Available,Under Maintenance]:");
+									String roomstatus=sc.nextLine().toLowerCase();
+									if(roomstatus.equals("book"))
+									{
+										System.out.println("Sorry this status will not accepted.. please try again.");
+									}else {
+										System.out.println( roomService.isRoomStatusUpdate(hotelId, roomNumber, roomstatus)?"Room Status Updated":"Room Status not updated");
+									}
+									break;
+								case 8://------------------------------close the system-------------------------------
+									System.out.println("\n🙏🙏 Thank You for visiting 🙏🙏\n");
 									exitFlag=true;
 									break;
 									//------------------------------close the system End-------------------------------
@@ -605,7 +727,8 @@ public class HotelReservationSystem {  //main class
 													System.out.println(roomTypeService.deleteRoomTypeId(amenityId)?"Room Type Deleted Successfully":"Room Type not Deleted Successfully");
 													break;
 												case 16:	//------------------------------close the system-------------------------------
-													System.out.println("Thank You for visiting\n");
+													System.out.println("\n\t 🙏🙏 Thank You for visiting 🙏🙏 \n");
+													System.out.println("------------------------------------------------------");
 													exitFlag=true;
 													break;
 													//------------------------------close the system End-------------------------------
@@ -640,7 +763,8 @@ public class HotelReservationSystem {  //main class
 							break;
 							case 3:
 								//------------------------------close the system start-------------------------------
-								System.out.println("Thank You for visiting\n");
+								System.out.println("\n\t 🙏🙏 Thank You for visiting 🙏🙏\n");
+								System.out.println("------------------------------------------------------");
 								exitFlag=true;
 								break;
 								//------------------------------close the system End-------------------------------
@@ -652,7 +776,8 @@ public class HotelReservationSystem {  //main class
 					break;
 					case 3:
 						//------------------------------close the system-------------------------------
-						System.out.println("Thank You for visiting\n");
+						System.out.println("\n\t🙏🙏 Thank You for visiting 🙏🙏\n");
+						System.out.println("------------------------------------------------------");
 						exitFlag=true;
 						break;
 						//------------------------------close the system End-------------------------------
@@ -666,7 +791,8 @@ public class HotelReservationSystem {  //main class
 				}
 			case 3:
 				//------------------------------close the system-------------------------------
-				System.out.println("Thank You for visiting");
+				System.out.println("\n\t 🙏🙏 Thank You for visiting 🙏🙏\n");
+				System.out.println("------------------------------------------------------");
 				flag=false;
 				break;
 				//------------------------------close the system End-------------------------------

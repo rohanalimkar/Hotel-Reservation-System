@@ -14,6 +14,7 @@ import model.StateModel;
 
 public class StateRepositoryImp extends DBState implements StateRepository { //main class
 List<HotelMaster>  list=new ArrayList<HotelMaster>();
+HotelMaster hotel=null;
 	@Override
 	public boolean addState(StateMaster state) {
 
@@ -66,19 +67,24 @@ List<HotelMaster>  list=new ArrayList<HotelMaster>();
 
 		
 		 try {
-<<<<<<< HEAD
-			ps=con.prepareStatement("SELECT h.hotelName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName ='Maharashtra';");
-=======
-			ps=con.prepareStatement("SELECT h.hotelName, s.stateName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName =?");
+			ps=con.prepareStatement("select h.hotelId, h.hotelName, s.stateName, d.districtName, c.cityName from hotel h join districtStateCityJoin dscj on h.hotelLocation = dscj.districtStateCityJoinId join state s on dscj.stateId = s.stateId join district d on dscj.districtId = d.districtId join city c on dscj.cityId = c.cityId where s.stateName = ? and h.status = 'Active'");
 			ps.setString(1, stateName);
->>>>>>> branch 'main' of https://github.com/rohanalimkar/Hotel-Reservation-System.git
 			rs=ps.executeQuery();
 			list.clear();
 			while(rs.next())
 			{
+				int hotelId=rs.getInt("hotelId");
 				String hotelName=rs.getString("hotelName");
-				 //stateName=rs.getString("stateName");
-				list.add(new HotelMaster(hotelName));
+				String stateName1=rs.getString("stateName");
+				String districtName=rs.getString("districtName");
+				String cityName=rs.getString("cityName");
+				 hotel=new HotelMaster();
+				hotel.setHotelId(hotelId);
+				hotel.setHotelName(hotelName);
+				hotel.setDistrictName(districtName);
+				hotel.setCityName(cityName);
+				hotel.setState(stateName1);
+				list.add(hotel);
 			}
 			return list.isEmpty() ? Optional.empty():Optional.of(list);
 		} catch (Exception e) {

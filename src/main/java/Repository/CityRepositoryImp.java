@@ -47,23 +47,9 @@ public class CityRepositoryImp extends DBState implements CityRepository {
 	}
 
 	@Override
-<<<<<<< HEAD
-	public Optional<List<HotelMaster>> CityWiseHotel(String stateName, String districtName, String cityName) {
-		try {
-			ps=con.prepareStatement("SELECT h.hotelName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName =? and districtName=? and cityName=?");
-			ps.setString(1, stateName);
-			ps.setString(2, districtName);
-			ps.setString(3, cityName);
-			rs=ps.executeQuery();
-			list.clear();
-			while(rs.next())
-			{
-				String hotelName=rs.getString("hotelName");
-				 //stateName=rs.getString("stateName");
-=======
 	public Optional<List<HotelMaster>> CityWiseHotel(String stateName, String districtName, String CityName) {
 		try {
-			ps=con.prepareStatement("SELECT h.hotelName, s.stateName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName ='?' and d.districtName=?");
+			ps=con.prepareStatement("SELECT h.hotelName, s.stateName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName ='?' and d.districtName=?  and h.status=Active");
 			ps.setString(1, stateName);
 			ps.setString(2, districtName);
 			rs=ps.executeQuery();
@@ -71,7 +57,6 @@ public class CityRepositoryImp extends DBState implements CityRepository {
 			while(rs.next())
 			{
 				String hotelName=rs.getString("hotelName");
->>>>>>> branch 'main' of https://github.com/rohanalimkar/Hotel-Reservation-System.git
 				list.add(new HotelMaster(hotelName));
 			}
 			return list.isEmpty() ? Optional.empty():Optional.of(list);

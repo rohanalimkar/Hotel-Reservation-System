@@ -40,12 +40,12 @@ List<RoomTypeMaster>  list=new ArrayList<RoomTypeMaster>();
 	@Override
 	public int getRoomTypeId(String typeName) {
 		try {
-			ps=con.prepareStatement("select roomTypeId where typeName=?");
+			ps=con.prepareStatement("select roomTypeId from roomtype where typeName=?");
 			ps.setString(1, typeName);
 			rs=ps.executeQuery();
 					if(rs.next())
 					{
-						int roomTypeId=rs.getInt("roomTypeId");
+						int roomTypeId=rs.getInt(1);
 						return roomTypeId;
 					}else {
 					return 0;}

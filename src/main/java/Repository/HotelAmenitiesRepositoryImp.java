@@ -1,12 +1,14 @@
 package Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import Model.AmenitiesMaster;
 import Model.HotelAmenitiesMaster;
 
 public class HotelAmenitiesRepositoryImp extends DBState implements HotelAmenitiesRepository {
-
+	List<HotelAmenitiesMaster>  list=new ArrayList<HotelAmenitiesMaster>();
 	@Override
 	public boolean addHotelAmenities(HotelAmenitiesMaster hotelAmenities) {
 		try {
@@ -56,9 +58,55 @@ public class HotelAmenitiesRepositoryImp extends DBState implements HotelAmeniti
 	}
 
 	@Override
-	public Optional<List<HotelAmenitiesMaster>> getAllAmenities() {
-		
-		return Optional.empty();
+	public Optional<List<HotelAmenitiesMaster>> getAllAmenities(int hotelId) {
+	    try {
+	        // Prepare the SQL query to fetch amenity details for the given hotel
+	        String query = "SELECT a.amenityId, a.amenityName, ha.price " +
+	                       "FROM hotelAmenities ha " +
+	                       "JOIN amenities a ON ha.amenityId = a.amenityId " +
+	                       "WHERE ha.hotelId = ?";
+
+	        ps = con.prepareStatement(query);
+	        ps.setInt(1, hotelId); 
+	        rs = ps.executeQuery();
+	        list.clear();
+	        while (rs.next()) {
+	            int amenityId = rs.getInt("amenityId");
+	            String amenityName = rs.getString("amenityName");
+	            float price = rs.getFloat("price");
+	            HotelAmenitiesMaster amenity = new HotelAmenitiesMaster();
+	            amenity.setAmenityId(amenityId);
+	            amenity.setAmenityName(amenityName);
+	            amenity.setPrice(price);
+	            list.add(amenity);
+	        }
+	        return list.isEmpty() ? Optional.empty() : Optional.of(list);
+	    } catch (Exception e) {
+	        System.out.println("Error: " + e);
+	        return Optional.empty();
+	    }
 	}
+
+	@Override
+	public float getHotelAmenityPrice(int hotelId,int amenityId) {
+		try {
+			ps=con.prepareStatement("SELECT ha.price  FROM hotelAmenities ha JOIN amenities a ON ha.amenityId = a.amenityId  WHERE ha.hotelId = ? and a.amenityId=?;");
+			ps.setInt(1, hotelId);
+			ps.setInt(2, amenityId);
+			rs=ps.executeQuery();
+			if(rs.next())
+			{
+				return rs.getFloat("price");
+			}else {
+				return 0;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+		
+	}
+
+
 
 }
