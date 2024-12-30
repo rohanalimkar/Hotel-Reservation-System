@@ -12,4 +12,7 @@ public interface RoomService {
 	public abstract boolean isRoomStatusUpdate(int hotelId,String roomNumber,String roomStatus);
 	public abstract Optional<List<RoomMaster>> getAllAvailableRoom(int hotelId);
 	public abstract float getRoomPrice(int hotelId,String roomNumber);
+	public abstract int getAvailableRoomCount(int hotelId);
+	public abstract int getRoomId(int hotelId,String roomNumber);
+	public abstract boolean isRoomStatusUpdateToAvailable(int hotelId,int roomId,String roomStatus);
 }

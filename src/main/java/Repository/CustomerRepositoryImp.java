@@ -79,7 +79,7 @@ public class CustomerRepositoryImp extends DBState implements CustomerRepository
 	            customer = new CustomerMaster();
 	            customer.setFirstName(firstName);  // Set first name
 	            customer.setLastName(lastName);    // Set last name
-	            return "Welcome " + customer.getFirstName() + " " + customer.getLastName();
+	            return customer.getFirstName() + " " + customer.getLastName();
 	        } else {
 	            // Return null if login failed (customer not found)
 	            return null;

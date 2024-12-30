@@ -78,11 +78,19 @@ public class RoomRepositoryImp extends DBState implements RoomRepository{
 	@Override
 	public int getAvailableRoomCount(int hotelId) {
 		try {
-			ps = con.prepareStatement("SELECT COUNT(*) AS availableRoomCount FROM room JOIN roomType rt ON r.roomTypeId = rt.roomTypeId JOIN hotel h ON r.hotelId = h.hotelId WHERE r.roomStatus = 'Available' AND h.hotelId =?");
+			ps = con.prepareStatement("SELECT COUNT(*) AS availableRoomCount FROM room r JOIN roomType rt ON r.roomTypeId = rt.roomTypeId JOIN hotel h ON r.hotelId = h.hotelId WHERE r.roomStatus = 'Available' AND h.hotelId = ?");
+			ps.setInt(1, hotelId);
+			rs=ps.executeQuery();
+			if(rs.next()) {
+				return rs.getInt("availableRoomCount");
+			}else {
+				return 0;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return 0;
 		}
-		return 0;
+		
 	}
 
 	@Override
@@ -123,6 +131,40 @@ public class RoomRepositoryImp extends DBState implements RoomRepository{
 			e.printStackTrace();
 			return 0;
 		}	
+	}
+
+	@Override
+	public int getRoomId(int hotelId, String roomNumber) {
+		try {
+			ps=con.prepareStatement("select roomId from room where hotelId=? and roomNumber=?");
+			ps.setInt(1, hotelId);
+			ps.setString(2,roomNumber);
+			rs=ps.executeQuery();
+			if(rs.next())
+			{
+				return rs.getInt("roomId");
+			}else {
+				return 0;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	@Override
+	public boolean isRoomStatusUpdateToAvailable(int hotelId, int roomId, String roomStatus) {
+		try {
+			ps=con.prepareStatement("update room set roomStatus=? where hotelId=? and roomId=?");
+			ps.setString(1, roomStatus);
+			ps.setInt(2, hotelId);
+			ps.setInt(3, roomId);
+			int result=ps.executeUpdate();
+			return result>0?true:false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 		

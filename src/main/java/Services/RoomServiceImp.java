@@ -39,6 +39,21 @@ public class RoomServiceImp implements RoomService{
 		
 		return roomRepo.getRoomPrice(hotelId, roomNumber);
 	}
+	@Override
+	public int getAvailableRoomCount(int hotelId) {
+		
+		return roomRepo.getAvailableRoomCount(hotelId);
+	}
+	@Override
+	public int getRoomId(int hotelId, String roomNumber) {
+		
+		return roomRepo.getRoomId(hotelId, roomNumber);
+	}
+	@Override
+	public boolean isRoomStatusUpdateToAvailable(int hotelId, int roomId, String roomStatus) {
+		// TODO Auto-generated method stub
+		return roomRepo.isRoomStatusUpdateToAvailable(hotelId, roomId, roomStatus);
+	}
 	
 
 }

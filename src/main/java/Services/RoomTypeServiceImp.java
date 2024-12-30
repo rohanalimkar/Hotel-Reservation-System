@@ -34,5 +34,6 @@ public class RoomTypeServiceImp implements RoomTypeService{
 		
 		return roomTypeRepo.getAllRoomType();
 	}
+	
 
 }

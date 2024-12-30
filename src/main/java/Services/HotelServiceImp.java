@@ -25,4 +25,10 @@ public class HotelServiceImp implements HotelService {
 		return hotelRepo.getHotelName(hotelEmail);
 	}
 
+	@Override
+	public String getHotelName(int hotelId) {
+		
+		return hotelRepo.getHotelName(hotelId);
+	}
+
 }

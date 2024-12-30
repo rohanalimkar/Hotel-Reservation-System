@@ -11,4 +11,5 @@ public interface RoomTypeService {
 	public abstract int getRoomTypeId(String typeName);
 	public abstract boolean deleteRoomTypeId(int roomTypeId);
 	public abstract Optional<List<RoomTypeMaster>> getAllRoomType();
+	
 }

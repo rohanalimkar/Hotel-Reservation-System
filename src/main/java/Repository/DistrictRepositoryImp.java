@@ -50,7 +50,7 @@ public class DistrictRepositoryImp extends DBState implements DistrictRepository
 	@Override
 	public Optional<List<HotelMaster>> DistrictWiseHotel(String stateName, String districtName) {
 		try {
-			ps=con.prepareStatement("SELECT h.hotelName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName =? and districtName=? and  and h.status=Active");
+			ps=con.prepareStatement("SELECT h.hotelName FROM hotel h JOIN districtStateCityJoin dscj ON h.hotelLocation = dscj.districtStateCityJoinId JOIN state s ON dscj.stateId = s.stateId JOIN district d ON dscj.districtId = d.districtId JOIN city c ON dscj.cityId = c.cityId WHERE s.stateName =? and districtName=? and h.status='Active'");
 			ps.setString(1, stateName);
 			ps.setString(2, districtName);
 			rs=ps.executeQuery();
