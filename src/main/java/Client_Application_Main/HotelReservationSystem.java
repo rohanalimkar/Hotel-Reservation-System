@@ -198,14 +198,14 @@ public class HotelReservationSystem {  //main class
 												            {
 													            Optional<List<RoomMaster>> o1=roomService.getAllAvailableRoom(hotelId);									
 																 if (o1.isPresent() && !o1.get().isEmpty()) {
-															            System.out.println("-------------------------------------------------------------------");
+																	 System.out.println("---------------------------------------------------------------------------------------------------------------------------");
 															            System.out.printf("%-20s | %-30s | %-10s |%n","Room Number","Room Type","Room Price");
-															            System.out.println("-------------------------------------------------------------------");
+															            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
 															            
 															            o1.get().forEach(h -> {
 															                System.out.printf("%-20s | %-30s | %-10.2f |%n",h.getRoomNumber(),h.getRoomType(),h.getRoomPrice());
 															            });
-															            System.out.println("-------------------------------------------------------------------");
+															            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
 															            customerId=customerService.getCustomerId(customerEmail);
 																		 System.out.println("Enter Room Id:");
 																		 String roomNumber=sc.nextLine();
@@ -242,17 +242,28 @@ public class HotelReservationSystem {  //main class
 															            		amenitiesCost+=hotelAmenityService.getHotelAmenityPrice(hotelId, amenityId);
 															            	}
 															            }
-															            System.out.println("total Ameninty Cost:"+amenitiesCost);
+															            System.out.println("************** HOTEL BILL **************");
+															            System.out.println("Hotel ID: " + hotelId);
+															            System.out.println("Room Number: " + roomNumber);
+															            System.out.println("----------------------------------------");
+															            System.out.println("Amenity Cost (per day)   : " + amenitiesCost);
 															            float roomPrice=roomService.getRoomPrice(hotelId, roomNumber);
-															            System.out.println("Room Cost:"+roomPrice);
-															            System.out.println("Advance Payment:");
-															            float advancePayment=sc.nextFloat();
+															            System.out.println("Room Price (per day)     : " +roomPrice);
+															            System.out.println("----------------------------------------");
+															            System.out.println("Days of Stay             : " + daysBetween);
+															            System.out.println("----------------------------------------");
+															            float totalBill = (amenitiesCost * daysBetween) + (roomPrice * daysBetween);
+															            System.out.println("Total Bill               : " + totalBill);
+															            System.out.println("----------------------------------------");
+															            System.out.print("Advance Payment          : ");
+															            float advancePayment = sc.nextFloat();
 															            sc.nextLine();
-															            float totalBill=amenitiesCost+(roomPrice*daysBetween);
-															            System.out.println("Total Bill   :"+totalBill);
-															            float remainingAmount=0;				            
-															            remainingAmount=totalBill-advancePayment;
-															            System.out.println("You have to pay:"+remainingAmount);
+															            System.out.println("----------------------------------------");
+															            float remainingAmount = totalBill - advancePayment;
+															            System.out.println("Remaining Amount to Pay  : " + remainingAmount);
+															            System.out.println("----------------------------------------");
+															            System.out.println("************ THANK YOU FOR STAYING ************");
+
 															            String Bookinstatus=null;
 															            reservation=new ReservationMaster();
 															            reservation.setAdvanceAmount(advancePayment);
@@ -306,7 +317,7 @@ public class HotelReservationSystem {  //main class
 																                	              "Check-In Date: " + checkInDate + "\n" +
 																                	              "Check-Out Date: " + checkOutDate + "\n" +
 																                	              "Total Amount: " + totalBill + "\n\n" +
-																                	              "If you have any further questions or need assistance, feel free to reach out to us at support@hotel.com.\n\n" 
+																                	              "If you have any further questions or need assistance, feel free to reach out to us at support@"+hotelService.getHotelName(hotelId)+".com.\n\n" 
 																                	              +"Best regards,\n" +
 																                	              "RA InfoTech";
 																                	              
@@ -396,17 +407,28 @@ public class HotelReservationSystem {  //main class
 														            		amenitiesCost+=hotelAmenityService.getHotelAmenityPrice(hotelId, amenityId);
 														            	}
 														            }
-														            System.out.println("total Ameninty Cost:"+amenitiesCost);
+														            System.out.println("************** HOTEL BILL **************");
+														            System.out.println("Hotel ID: " + hotelId);
+														            System.out.println("Room Number: " + roomNumber);
+														            System.out.println("----------------------------------------");
+														            System.out.println("Amenity Cost (per day)   : " + amenitiesCost);
 														            float roomPrice=roomService.getRoomPrice(hotelId, roomNumber);
-														            System.out.println("Room Cost:"+roomPrice);
-														            System.out.println("Advance Payment:");
-														            float advancePayment=sc.nextFloat();
+														            System.out.println("Room Price (per day)     : " +roomPrice);
+														            System.out.println("----------------------------------------");
+														            System.out.println("Days of Stay             : " + daysBetween);
+														            System.out.println("----------------------------------------");
+														            float totalBill = (amenitiesCost * daysBetween) + (roomPrice * daysBetween);
+														            System.out.println("Total Bill               : " + totalBill);
+														            System.out.println("----------------------------------------");
+														            System.out.print("Advance Payment          : ");
+														            float advancePayment = sc.nextFloat();
 														            sc.nextLine();
-														            float totalBill=amenitiesCost+(roomPrice*daysBetween);
-														            System.out.println("Total Bill   :"+totalBill);
-														            float remainingAmount=0;				            
-														            remainingAmount=totalBill-advancePayment;
-														            System.out.println("You have to pay:"+remainingAmount);
+														            System.out.println("----------------------------------------");
+														            float remainingAmount = totalBill - advancePayment;
+														            System.out.println("Remaining Amount to Pay  : " + remainingAmount);
+														            System.out.println("----------------------------------------");
+														            System.out.println("************ THANK YOU FOR STAYING ************");
+
 														            String Bookinstatus=null;
 														            reservation=new ReservationMaster();
 														            reservation.setAdvanceAmount(advancePayment);
@@ -460,7 +482,7 @@ public class HotelReservationSystem {  //main class
 														                	              "Check-In Date: " + checkInDate + "\n" +
 														                	              "Check-Out Date: " + checkOutDate + "\n" +
 														                	              "Total Amount: " + totalBill + "\n\n" +
-														                	              "If you have any further questions or need assistance, feel free to reach out to us at support@hotel.com.\n\n" 
+														                	              "If you have any further questions or need assistance, feel free to reach out to us at support@"+hotelService.getHotelName(hotelId)+".com.\n\n" 
 														                	              +"Best regards,\n" +
 														                	              "RA InfoTech";
 															                	              
@@ -520,18 +542,18 @@ public class HotelReservationSystem {  //main class
 									if(choice.equals(str)) // if yes then show district wise list of hotels
 									{
 										Optional<List<HotelMaster>> o=districtService.DistrictWiseHotel(stateName,districtName);
-										 if (o.isPresent() && !o.get().isEmpty()) {
-									            System.out.println("----------------------------------------");
-									            System.out.printf("%-5s | %-30s | %n", "No.", "Hotel Name");
-									            System.out.println("----------------------------------------");
-									            
-									            AtomicInteger count = new AtomicInteger(1);
-									            o.get().forEach(h -> {
-									                System.out.printf("%-5d | %-30s | %n", count.get(), h.getHotelName());
-									                count.incrementAndGet();
-									            });
-									            System.out.println("----------------------------------------");
-									            String reservationDate = LocalDate.now().toString();
+										if (o.isPresent() && !o.get().isEmpty()) {
+								            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+								            System.out.printf("%-5s | %-30s | %-30s | %-30s | %-30s %n", "hotelId", "Hotel Name","State","District","City");
+								            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+								            
+								            AtomicInteger count = new AtomicInteger(1);
+								            o.get().forEach(h -> {
+								                System.out.printf("%-5d | %-30s | %-30s | %-30s | %-30s %n", h.getHotelId(), h.getHotelName(),h.getState(),h.getDistrictName(),h.getCityName());
+								                count.incrementAndGet();
+								            });
+								            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+								            String reservationDate = LocalDate.now().toString();
 												boolean correctDate=false;
 												String checkInDate = null,checkOutDate = null;
 												long daysBetween;
@@ -615,17 +637,28 @@ public class HotelReservationSystem {  //main class
 															            		amenitiesCost+=hotelAmenityService.getHotelAmenityPrice(hotelId, amenityId);
 															            	}
 															            }
-															            System.out.println("total Ameninty Cost:"+amenitiesCost);
+															            System.out.println("************** HOTEL BILL **************");
+															            System.out.println("Hotel ID: " + hotelId);
+															            System.out.println("Room Number: " + roomNumber);
+															            System.out.println("----------------------------------------");
+															            System.out.println("Amenity Cost (per day)   : " + amenitiesCost);
 															            float roomPrice=roomService.getRoomPrice(hotelId, roomNumber);
-															            System.out.println("Room Cost:"+roomPrice);
-															            System.out.println("Advance Payment:");
-															            float advancePayment=sc.nextFloat();
+															            System.out.println("Room Price (per day)     : " +roomPrice);
+															            System.out.println("----------------------------------------");
+															            System.out.println("Days of Stay             : " + daysBetween);
+															            System.out.println("----------------------------------------");
+															            float totalBill = (amenitiesCost * daysBetween) + (roomPrice * daysBetween);
+															            System.out.println("Total Bill               : " + totalBill);
+															            System.out.println("----------------------------------------");
+															            System.out.print("Advance Payment          : ");
+															            float advancePayment = sc.nextFloat();
 															            sc.nextLine();
-															            float totalBill=amenitiesCost+(roomPrice*daysBetween);
-															            System.out.println("Total Bill   :"+totalBill);
-															            float remainingAmount=0;				            
-															            remainingAmount=totalBill-advancePayment;
-															            System.out.println("You have to pay:"+remainingAmount);
+															            System.out.println("----------------------------------------");
+															            float remainingAmount = totalBill - advancePayment;
+															            System.out.println("Remaining Amount to Pay  : " + remainingAmount);
+															            System.out.println("----------------------------------------");
+															            System.out.println("************ THANK YOU FOR STAYING ************");
+
 															            String Bookinstatus=null;
 															            reservation=new ReservationMaster();
 															            reservation.setAdvanceAmount(advancePayment);
@@ -679,7 +712,7 @@ public class HotelReservationSystem {  //main class
 															                	              "Check-In Date: " + checkInDate + "\n" +
 															                	              "Check-Out Date: " + checkOutDate + "\n" +
 															                	              "Total Amount: " + totalBill + "\n\n" +
-															                	              "If you have any further questions or need assistance, feel free to reach out to us at support@hotel.com.\n\n" 
+															                	              "If you have any further questions or need assistance, feel free to reach out to us at support@"+hotelService.getHotelName(hotelId)+".com.\n\n" 
 															                	              +"Best regards,\n" +
 															                	              "RA InfoTech";
 																                	              
@@ -769,17 +802,28 @@ public class HotelReservationSystem {  //main class
 														            		amenitiesCost+=hotelAmenityService.getHotelAmenityPrice(hotelId, amenityId);
 														            	}
 														            }
-														            System.out.println("total Ameninty Cost:"+amenitiesCost);
+														            System.out.println("************** HOTEL BILL **************");
+														            System.out.println("Hotel ID: " + hotelId);
+														            System.out.println("Room Number: " + roomNumber);
+														            System.out.println("----------------------------------------");
+														            System.out.println("Amenity Cost (per day)   : " + amenitiesCost);
 														            float roomPrice=roomService.getRoomPrice(hotelId, roomNumber);
-														            System.out.println("Room Cost:"+roomPrice);
-														            System.out.println("Advance Payment:");
-														            float advancePayment=sc.nextFloat();
+														            System.out.println("Room Price (per day)     : " +roomPrice);
+														            System.out.println("----------------------------------------");
+														            System.out.println("Days of Stay             : " + daysBetween);
+														            System.out.println("----------------------------------------");
+														            float totalBill = (amenitiesCost * daysBetween) + (roomPrice * daysBetween);
+														            System.out.println("Total Bill               : " + totalBill);
+														            System.out.println("----------------------------------------");
+														            System.out.print("Advance Payment          : ");
+														            float advancePayment = sc.nextFloat();
 														            sc.nextLine();
-														            float totalBill=amenitiesCost+(roomPrice*daysBetween);
-														            System.out.println("Total Bill   :"+totalBill);
-														            float remainingAmount=0;				            
-														            remainingAmount=totalBill-advancePayment;
-														            System.out.println("You have to pay:"+remainingAmount);
+														            System.out.println("----------------------------------------");
+														            float remainingAmount = totalBill - advancePayment;
+														            System.out.println("Remaining Amount to Pay  : " + remainingAmount);
+														            System.out.println("----------------------------------------");
+														            System.out.println("************ THANK YOU FOR STAYING ************");
+
 														            String Bookinstatus=null;
 														            reservation=new ReservationMaster();
 														            reservation.setAdvanceAmount(advancePayment);
@@ -833,7 +877,7 @@ public class HotelReservationSystem {  //main class
 														                	              "Check-In Date: " + checkInDate + "\n" +
 														                	              "Check-Out Date: " + checkOutDate + "\n" +
 														                	              "Total Amount: " + totalBill + "\n\n" +
-														                	              "If you have any further questions or need assistance, feel free to reach out to us at support@hotel.com.\n\n" 
+														                	              "If you have any further questions or need assistance, feel free to reach out to us at support@"+hotelService.getHotelName(hotelId)+".com.\n\n" 
 														                	              +"Best regards,\n" +
 														                	              "RA InfoTech";
 															                	              
@@ -891,18 +935,18 @@ public class HotelReservationSystem {  //main class
 										if(cityId>0)
 										{
 											Optional<List<HotelMaster>> o=cityService.CityWiseHotel(stateName, districtName, cityName);									
-											 if (o.isPresent() && !o.get().isEmpty()) {
-										            System.out.println("----------------------------------------");
-										            System.out.printf("%-5s | %-30s | %n", "No.", "Hotel Name");
-										            System.out.println("----------------------------------------");
-										            
-										            AtomicInteger count = new AtomicInteger(1);
-										            o.get().forEach(h -> {
-										                System.out.printf("%-5d | %-30s | %n", count.get(), h.getHotelName());
-										                count.incrementAndGet();
-										            });
-										            System.out.println("----------------------------------------");
-										            String reservationDate = LocalDate.now().toString();
+											if (o.isPresent() && !o.get().isEmpty()) {
+									            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+									            System.out.printf("%-5s | %-30s | %-30s | %-30s | %-30s %n", "hotelId", "Hotel Name","State","District","City");
+									            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+									            
+									            AtomicInteger count = new AtomicInteger(1);
+									            o.get().forEach(h -> {
+									                System.out.printf("%-5d | %-30s | %-30s | %-30s | %-30s %n", h.getHotelId(), h.getHotelName(),h.getState(),h.getDistrictName(),h.getCityName());
+									                count.incrementAndGet();
+									            });
+									            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+									            String reservationDate = LocalDate.now().toString();
 													boolean correctDate=false;
 													String checkInDate = null,checkOutDate = null;
 													long daysBetween;
@@ -985,17 +1029,28 @@ public class HotelReservationSystem {  //main class
 																            		amenitiesCost+=hotelAmenityService.getHotelAmenityPrice(hotelId, amenityId);
 																            	}
 																            }
-																            System.out.println("total Ameninty Cost:"+amenitiesCost);
+																            System.out.println("************** HOTEL BILL **************");
+																            System.out.println("Hotel ID: " + hotelId);
+																            System.out.println("Room Number: " + roomNumber);
+																            System.out.println("----------------------------------------");
+																            System.out.println("Amenity Cost (per day)   : " + amenitiesCost);
 																            float roomPrice=roomService.getRoomPrice(hotelId, roomNumber);
-																            System.out.println("Room Cost:"+roomPrice);
-																            System.out.println("Advance Payment:");
-																            float advancePayment=sc.nextFloat();
+																            System.out.println("Room Price (per day)     : " +roomPrice);
+																            System.out.println("----------------------------------------");
+																            System.out.println("Days of Stay             : " + daysBetween);
+																            System.out.println("----------------------------------------");
+																            float totalBill = (amenitiesCost * daysBetween) + (roomPrice * daysBetween);
+																            System.out.println("Total Bill               : " + totalBill);
+																            System.out.println("----------------------------------------");
+																            System.out.print("Advance Payment          : ");
+																            float advancePayment = sc.nextFloat();
 																            sc.nextLine();
-																            float totalBill=amenitiesCost+(roomPrice*daysBetween);
-																            System.out.println("Total Bill   :"+totalBill);
-																            float remainingAmount=0;				            
-																            remainingAmount=totalBill-advancePayment;
-																            System.out.println("You have to pay:"+remainingAmount);
+																            System.out.println("----------------------------------------");
+																            float remainingAmount = totalBill - advancePayment;
+																            System.out.println("Remaining Amount to Pay  : " + remainingAmount);
+																            System.out.println("----------------------------------------");
+																            System.out.println("************ THANK YOU FOR STAYING ************");
+
 																            String Bookinstatus=null;
 																            reservation=new ReservationMaster();
 																            reservation.setAdvanceAmount(advancePayment);
@@ -1049,7 +1104,7 @@ public class HotelReservationSystem {  //main class
 																                	              "Check-In Date: " + checkInDate + "\n" +
 																                	              "Check-Out Date: " + checkOutDate + "\n" +
 																                	              "Total Amount: " + totalBill + "\n\n" +
-																                	              "If you have any further questions or need assistance, feel free to reach out to us at support@hotel.com.\n\n" 
+																                	              "If you have any further questions or need assistance, feel free to reach out to us at support@"+hotelService.getHotelName(hotelId)+".com.\n\n" 
 																                	              +"Best regards,\n" +
 																                	              "RA InfoTech";
 																	                	              
@@ -1139,17 +1194,28 @@ public class HotelReservationSystem {  //main class
 															            		amenitiesCost+=hotelAmenityService.getHotelAmenityPrice(hotelId, amenityId);
 															            	}
 															            }
-															            System.out.println("total Ameninty Cost:"+amenitiesCost);
+															            System.out.println("************** HOTEL BILL **************");
+															            System.out.println("Hotel ID: " + hotelId);
+															            System.out.println("Room Number: " + roomNumber);
+															            System.out.println("----------------------------------------");
+															            System.out.println("Amenity Cost (per day)   : " + amenitiesCost);
 															            float roomPrice=roomService.getRoomPrice(hotelId, roomNumber);
-															            System.out.println("Room Cost:"+roomPrice);
-															            System.out.println("Advance Payment:");
-															            float advancePayment=sc.nextFloat();
+															            System.out.println("Room Price (per day)     : " +roomPrice);
+															            System.out.println("----------------------------------------");
+															            System.out.println("Days of Stay             : " + daysBetween);
+															            System.out.println("----------------------------------------");
+															            float totalBill = (amenitiesCost * daysBetween) + (roomPrice * daysBetween);
+															            System.out.println("Total Bill               : " + totalBill);
+															            System.out.println("----------------------------------------");
+															            System.out.print("Advance Payment          : ");
+															            float advancePayment = sc.nextFloat();
 															            sc.nextLine();
-															            float totalBill=amenitiesCost+(roomPrice*daysBetween);
-															            System.out.println("Total Bill   :"+totalBill);
-															            float remainingAmount=0;				            
-															            remainingAmount=totalBill-advancePayment;
-															            System.out.println("You have to pay:"+remainingAmount);
+															            System.out.println("----------------------------------------");
+															            float remainingAmount = totalBill - advancePayment;
+															            System.out.println("Remaining Amount to Pay  : " + remainingAmount);
+															            System.out.println("----------------------------------------");
+															            System.out.println("************ THANK YOU FOR STAYING ************");
+
 															            String Bookinstatus=null;
 															            reservation=new ReservationMaster();
 															            reservation.setAdvanceAmount(advancePayment);
@@ -1203,7 +1269,7 @@ public class HotelReservationSystem {  //main class
 															                	              "Check-In Date: " + checkInDate + "\n" +
 															                	              "Check-Out Date: " + checkOutDate + "\n" +
 															                	              "Total Amount: " + totalBill + "\n\n" +
-															                	              "If you have any further questions or need assistance, feel free to reach out to us at support@hotel.com.\n\n" 
+															                	              "If you have any further questions or need assistance, feel free to reach out to us at support@"+hotelService.getHotelName(hotelId)+".com.\n\n" 
 															                	              +"Best regards,\n" +
 															                	              "RA InfoTech";
 																                	              
@@ -1648,16 +1714,49 @@ public class HotelReservationSystem {  //main class
 															System.out.println(amenitiesService.updateAmenities(amenityName, description, amenityId)?"\nAmenity Updated Successfully":"\nAmenity not Updated");
 													break;
 													case 5:	//--------------------Update State--------------------
+															System.out.println("Enter State Name for Update:");
+															String stateName=sc.nextLine();
+															int stateID=stateService.isStatePresent(stateName);
+															System.out.println("Enter Nesw State Name For Update:");
+															String updatedName=sc.nextLine();
+															System.out.println(stateService.isUpdateState(stateID, updatedName)?"State Updated Successfully":"State Not Updated");
 													break;
 													case 6:	//--------------------Delete State--------------------
+															System.out.println("Enter State Name To Delete :");
+															 stateName=sc.nextLine();
+															int stateId=stateService.isStatePresent(stateName);
+															System.out.println(stateService.isDeleteState(stateId)?"State Deleted Successfuly":"State Not deleted Succefully");
 													break;
 													case 7:	//--------------------Update District--------------------
+															System.out.println("Enter district Name for Update:");
+															String districtName=sc.nextLine();
+															int districtId=districtService.isDistrictPresent(districtName);
+															System.out.println("Enter New district Name For Update:");
+															updatedName=sc.nextLine();
+															System.out.println(districtService.isDistrictUpdate(districtId, districtName)?"District Updated Succefully":"District Not Updated Successfully");
+														
 													break;
 													case 8:	//--------------------Delete District--------------------
+															System.out.println("Enter district Name for Update:");
+															districtName=sc.nextLine();
+															districtId=districtService.isDistrictPresent(districtName);
+															System.out.println(districtService.isDistrictDelete(districtId)?"District Deleted Succefully":"District Not deleted Successfully");
 													break;
 													case 9:	//--------------------Update City--------------------
+															System.out.println("Enter City Name for Update:");
+															String cityName=sc.nextLine();
+															int cityId=cityService.isCityPresent(cityName);
+															System.out.println("Enter New City Name for Update:");
+															updatedName=sc.nextLine();
+															System.out.println(cityService.isUpdateCity(cityId, updatedName)?"City Name Updated Successfully":"City Name Not updtaed Successfully");
+															
 													break;
 													case 10:	//--------------------Delete City--------------------
+															System.out.println("Enter City Name for Update:");
+															 cityName=sc.nextLine();
+															cityId=cityService.isCityPresent(cityName);
+															System.out.println(cityService.isDeleteCity(cityId)?"city Name Deleted Successfully":"city Name not deleted successfully");
+															
 													break;
 													case 11:	//--------------------Update Sub Admin--------------------
 																System.out.println("Enter username for update:");

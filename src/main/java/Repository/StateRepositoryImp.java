@@ -5,12 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
-
-import Client_Application_Main.HotelReservationSystem;
 import Model.HotelMaster;
 import Model.StateMaster;
-import model.StateModel;
 
 public class StateRepositoryImp extends DBState implements StateRepository { //main class
 List<HotelMaster>  list=new ArrayList<HotelMaster>();
@@ -91,6 +87,35 @@ HotelMaster hotel=null;
 			System.out.println("Error is:"+e);
 			return Optional.empty();
 		}
+	}
+
+	@Override
+	public boolean isUpdateState(int StateId, String UpdatedName) {
+		try {
+			ps=con.prepareStatement("update state set stateName=? where StateId=?");
+			ps.setString(1,UpdatedName);
+			ps.setInt(2, StateId);
+			int result=ps.executeUpdate();
+			return result>0?true:false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+	}
+
+	@Override
+	public boolean isDeleteState(int Stateid) {
+		try {
+			ps=con.prepareStatement("delete from state where Stateid=?");
+			ps.setInt(1, Stateid);
+			int result=ps.executeUpdate();
+			return result>0?true:false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
 	}
 
 	

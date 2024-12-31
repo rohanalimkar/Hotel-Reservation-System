@@ -12,4 +12,6 @@ public interface StateRepository {
 	public abstract boolean addState(StateMaster state);
 	public abstract int isStatePresent(String stateName);
 	public abstract Optional<List<HotelMaster>> StateWiseHotel(String stateName);
+	public abstract boolean isUpdateState(int Stateid,String UpdatedName);
+	public abstract boolean isDeleteState(int Stateid);
 }

@@ -29,6 +29,18 @@ public class CityServiceImp implements CityService {
 		return cityRepo.CityWiseHotel(stateName, districtName, cityName);
 	}
 
+	@Override
+	public boolean isUpdateCity(int cityId, String UpdatedName) {
+		// TODO Auto-generated method stub
+		return cityRepo.isUpdateCity(cityId, UpdatedName);
+	}
+
+	@Override
+	public boolean isDeleteCity(int cityId) {
+		// TODO Auto-generated method stub
+		return cityRepo.isDeleteCity(cityId);
+	}
+
 	
 
 }

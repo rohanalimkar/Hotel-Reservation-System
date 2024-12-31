@@ -34,4 +34,18 @@ public class StateServiceImp implements StateService {
 	}
 
 
+	@Override
+	public boolean isUpdateState(int Stateid, String UpdatedName) {
+		// TODO Auto-generated method stub
+		return stateRepo.isUpdateState(Stateid, UpdatedName);
+	}
+
+
+	@Override
+	public boolean isDeleteState(int Stateid) {
+		// TODO Auto-generated method stub
+		return stateRepo.isDeleteState(Stateid);
+	}
+
+
 }

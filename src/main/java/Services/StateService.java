@@ -10,4 +10,6 @@ public interface StateService {
 	public boolean addState(StateMaster state);
 	public abstract int isStatePresent(String stateName);
 	public Optional<List<HotelMaster>> StateWiseHotel(String stateName);
+	public abstract boolean isUpdateState(int Stateid,String UpdatedName);
+	public abstract boolean isDeleteState(int Stateid);
 }

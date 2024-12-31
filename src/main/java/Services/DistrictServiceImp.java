@@ -30,4 +30,16 @@ public class DistrictServiceImp implements DistrictService {
 		return districtRepo.DistrictWiseHotel(stateName, districtName);
 	}
 
+		@Override
+		public boolean isDistrictUpdate(int districtId, String districtName) {
+			// TODO Auto-generated method stub
+			return districtRepo.isDistrictUpdate(districtId, districtName);
+		}
+
+		@Override
+		public boolean isDistrictDelete(int districtId) {
+			// TODO Auto-generated method stub
+			return districtRepo.isDistrictDelete(districtId);
+		}
+
 }
